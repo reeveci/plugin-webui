@@ -1,4 +1,4 @@
-# Reeve CI / CD - Web UI plugin
+# Reeve CI / CD - Web UI Plugin
 
 This is a [Reeve](https://github.com/reeveci/reeve) plugin that provides an admin web interface.
 
