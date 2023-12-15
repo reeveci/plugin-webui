@@ -61,7 +61,7 @@ const Header = styled.td`
   user-select: none;
   cursor: pointer;
 
-  :hover {
+  &:hover {
     text-decoration: underline;
   }
 `;
@@ -115,8 +115,8 @@ const ActionButton = styled(Button)`
   text-transform: capitalize;
   border: 1px solid transparent;
 
-  ${({ status }) => {
-    switch (status) {
+  ${({ $status }) => {
+    switch ($status) {
       case "success":
         return successAnimation;
 
@@ -258,7 +258,7 @@ function Action({ id, name, plugin }) {
   }, [dataProvider, id]);
 
   return (
-    <ActionButton key={id} onClick={handleClick} status={status}>
+    <ActionButton key={id} onClick={handleClick} $status={status}>
       {(name || id).replace(/-/g, " ")}
       <br />
       <i>{plugin}</i>

@@ -53,8 +53,8 @@ const SideBar = styled.div`
   }
 
   @media only screen and (max-width: 767px) {
-    ${({ menuVisible }) =>
-      menuVisible
+    ${({ $menuVisible }) =>
+      $menuVisible
         ? `
           height: 100%;
           `
@@ -158,8 +158,8 @@ const Detail = styled.div`
   }
 
   @media only screen and (max-width: 767px) {
-    ${({ menuVisible }) =>
-      menuVisible
+    ${({ $menuVisible }) =>
+      $menuVisible
         ? `
           display: none;
           `
@@ -212,7 +212,7 @@ function App() {
 
   return (
     <>
-      <SideBar menuVisible={menuVisible}>
+      <SideBar $menuVisible={menuVisible}>
         <Title>
           <TitleLink to="/" onClick={closeMenu}>
             {APP_NAME}
@@ -266,7 +266,7 @@ function App() {
         </Nav>
       </SideBar>
 
-      <Detail menuVisible={menuVisible}>
+      <Detail $menuVisible={menuVisible}>
         <Outlet />
       </Detail>
     </>

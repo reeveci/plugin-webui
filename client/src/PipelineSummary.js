@@ -85,7 +85,7 @@ function PipelineSummary({ pipeline, href }) {
 
         <StatusRow>
           <StatusCell width="20%">
-            <Status status={pipeline.status}>{pipeline.status}</Status>
+            <Status $status={pipeline.status}>{pipeline.status}</Status>
           </StatusCell>
 
           <StatusCell width="30%">

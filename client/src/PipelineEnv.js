@@ -30,7 +30,7 @@ const Header = styled.td`
   user-select: none;
   cursor: pointer;
 
-  :hover {
+  &:hover {
     text-decoration: underline;
   }
 `;

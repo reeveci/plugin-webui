@@ -34,7 +34,7 @@ const SetupHeader = styled.td`
   user-select: none;
   cursor: pointer;
 
-  :hover {
+  &:hover {
     text-decoration: underline;
   }
 `;
@@ -74,7 +74,7 @@ const CardContent = styled.tbody``;
 
 const HeaderRow = styled.tr`
   max-width: 0px;
-  position: ${({ sticky }) => (sticky ? "sticky" : "inherit")};
+  position: ${({ $sticky }) => ($sticky ? "sticky" : "inherit")};
   top: -2px;
   margin-bottom: 2px;
 `;
@@ -123,8 +123,8 @@ const Logs = styled.td`
   color: white;
   background-color: hsl(224, 38%, 18%);
 
-  ${({ attached }) =>
-    attached
+  ${({ $attached }) =>
+    $attached
       ? `
         border-top-left-radius: 0px;
         border-top-right-radius: 0px;
@@ -314,7 +314,7 @@ function Step({ name, stage, status, log, index, count }) {
   return (
     <Card>
       <CardContent>
-        <HeaderRow sticky={visible}>
+        <HeaderRow $sticky={visible}>
           <Header
             title={
               stage && stage !== DEFAULT_STAGE
@@ -333,7 +333,7 @@ function Step({ name, stage, status, log, index, count }) {
             </Name>
 
             <Controls>
-              <Status status={status}>{status}</Status>
+              <Status $status={status}>{status}</Status>
 
               <LogButton onClick={handleToggleVisible}>
                 <FontAwesomeIcon icon={faTerminal} fixedWidth />
@@ -344,7 +344,7 @@ function Step({ name, stage, status, log, index, count }) {
 
         {visible ? (
           <LogsRow>
-            <Logs attached>
+            <Logs $attached>
               <pre>{log || <i>No logs available</i>}</pre>
             </Logs>
           </LogsRow>
