@@ -39,7 +39,8 @@ class UIDataProvider extends DataProvider {
     try {
       const res = await superagent
         .get(joinURL(this.url, resource))
-        .set({ Authorization: `Bearer ${this.token}` });
+        .accept("json")
+        .set("Authorization", `Bearer ${this.token}`);
 
       return options.getItems(res.body);
     } catch (err) {
@@ -58,7 +59,8 @@ class UIDataProvider extends DataProvider {
     try {
       const res = await superagent
         .post(joinURL(this.url, resource))
-        .set({ Authorization: `Bearer ${this.token}` })
+        .accept("json")
+        .set("Authorization", `Bearer ${this.token}`)
         .send(data);
 
       return res.body;
@@ -85,7 +87,10 @@ class UIDataProvider extends DataProvider {
           mode: "cors",
           cache: "no-store",
           credentials: "same-origin",
-          headers: { Authorization: `Bearer ${this.token}` },
+          headers: {
+            Accept: "text/plain",
+            Authorization: `Bearer ${this.token}`,
+          },
           signal: abortController == null ? undefined : abortController.signal,
         });
 
