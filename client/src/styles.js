@@ -35,7 +35,7 @@ const Styles = createGlobalStyle`
     flex-direction: column;
     height: 100%;
     width: 100%;
-    
+
     @media only screen and (min-width: 768px)  {
       flex-direction: row;
     }
@@ -96,13 +96,17 @@ const elementStyle = css`
   border-radius: 8px;
   padding: 0.5rem 0.75rem;
   -webkit-appearance: none;
-  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.2), 0 1px 2px hsla(0, 0%, 0%, 0.2);
+  box-shadow:
+    0 0px 1px hsla(0, 0%, 0%, 0.2),
+    0 1px 2px hsla(0, 0%, 0%, 0.2);
   background-color: white;
   line-height: 1.5;
   margin: 0;
 
   &:hover {
-    box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.6), 0 1px 2px hsla(0, 0%, 0%, 0.2);
+    box-shadow:
+      0 0px 1px hsla(0, 0%, 0%, 0.6),
+      0 1px 2px hsla(0, 0%, 0%, 0.2);
   }
 
   @media (prefers-color-scheme: dark) {

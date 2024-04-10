@@ -3,10 +3,12 @@ export function getCookie(name) {
   const decodedCookie = decodeURIComponent(document.cookie);
 
   return (
-    decodedCookie.split(";").find((entry) => {
-      return entry.trim().startsWith(key);
-    }) || ""
-  ).substring(key.length);
+    decodedCookie
+      .split(";")
+      .find((entry) => entry.trim().startsWith(key))
+      ?.trim()
+      .substring(key.length) ?? ""
+  );
 }
 
 export function setCookie(name, value, expires) {
@@ -28,7 +30,7 @@ export function parseJWT(token) {
     atob(b64)
       .split("")
       .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
-      .join("")
+      .join(""),
   );
   return JSON.parse(jsonPayload);
 }

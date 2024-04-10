@@ -13,9 +13,9 @@ const API_PREFIX = "/api"
 const API_VERSION = "v1"
 const API_PATH = API_PREFIX + "/" + API_VERSION
 
-const clientPath = "client/build"
+const clientPath = "client/dist"
 
-//go:embed all:client/build
+//go:embed all:client/dist
 var clientSource embed.FS
 
 func Serve(p *WebUIPlugin) {
