@@ -1554,10 +1554,10 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   color: #818181;
   background-color: #f7f7f7;
 
-  :first-child {
+  &:first-child {
     border-bottom-left-radius: 6px;
   }
-  :last-child {
+  &:last-child {
     border-bottom-right-radius: 6px;
   }
 
