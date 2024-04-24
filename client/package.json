@@ -18,15 +18,15 @@
     "@uiw/react-markdown-preview": "^5.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.3",
+    "react-router-dom": "^6.23.0",
     "styled-components": "^6.1.8",
-    "superagent": "^8.1.2",
+    "superagent": "^9.0.1",
     "text-encoding-utf-8": "^1.0.2",
     "url-parse": "^1.5.10"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
-    "eslint": "^8.53.0",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-prettier": "^5.0.1",
