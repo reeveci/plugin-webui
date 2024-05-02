@@ -100,9 +100,8 @@ function PipelineSummary({ pipeline, href }) {
         <NameRow>
           <Name colSpan={3}>
             {pipeline.name}
-            <br>
-              <small>{pipeline.headline}</small>
-            </br>
+            <br />
+            <small>{pipeline.headline}</small>
           </Name>
         </NameRow>
 
