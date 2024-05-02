@@ -34,7 +34,9 @@ func HandlePipeline(p *WebUIPlugin) http.HandlerFunc {
 			PipelineSummaryResponse: PipelineSummaryResponse{
 				ID:        entry.ActivityID,
 				Name:      entry.Pipeline.Name,
+				Headline:  entry.Pipeline.Headline,
 				StartTime: entry.StartTime,
+				EndTime:   entry.EndTime,
 				Status:    entry.Status,
 				Result:    entry.Result,
 			},

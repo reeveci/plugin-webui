@@ -27,8 +27,8 @@ type PipelineHistory struct {
 type HistoryEntry struct {
 	schema.PipelineStatus
 
-	StartTime time.Time
-	Logs      schema.LogReaderProvider
+	StartTime, EndTime time.Time
+	Logs               schema.LogReaderProvider
 }
 
 func (p *PipelineHistory) Put(status schema.PipelineStatus) *HistoryEntry {
@@ -78,6 +78,7 @@ func (p *PipelineHistory) Put(status schema.PipelineStatus) *HistoryEntry {
 	}
 
 	if status.Finished() {
+		entry.EndTime = time.Now()
 		p.cleanup(status.WorkerGroup)
 	}
 
@@ -127,7 +128,9 @@ func (p *PipelineHistory) Summary(workerGroup string) WorkerGroupResponse {
 		result.Pipelines[count-1-i] = PipelineSummaryResponse{
 			ID:        entry.ActivityID,
 			Name:      entry.Pipeline.Name,
+			Headline:  entry.Pipeline.Headline,
 			StartTime: entry.StartTime,
+			EndTime:   entry.EndTime,
 			Status:    entry.Status,
 			Result:    entry.Result,
 		}

@@ -79,12 +79,31 @@ const StyledLink = styled(Link)`
   }
 `;
 
+function formatDuration(start, end) {
+  const millis = Math.abs(end - start || 0);
+
+  if (millis >= 3600000) {
+    const h = Math.floor(millis / 3600000);
+    const m = Math.floor((millis % 3600000) / 60000);
+    return `${h}h ${m}m`;
+  }
+
+  const m = Math.floor(millis / 60000);
+  const s = Math.floor((millis % 60000) / 1000);
+  return `${m}m ${s}s`;
+}
+
 function PipelineSummary({ pipeline, href }) {
   const content = (
     <Card>
       <CardContent>
         <NameRow>
-          <Name colSpan={3}>{pipeline.name}</Name>
+          <Name colSpan={3}>
+            {pipeline.name}
+            <br>
+              <small>{pipeline.headline}</small>
+            </br>
+          </Name>
         </NameRow>
 
         <StatusRow>
@@ -103,7 +122,14 @@ function PipelineSummary({ pipeline, href }) {
               <>
                 Status {pipeline.result.exitCode}
                 <br />
-                <i>{pipeline.result.error || "\u200B"}</i>
+                <span>
+                  {pipeline.endTime
+                    ? formatDuration(
+                        new Date(pipeline.startTime),
+                        new Date(pipeline.endTime),
+                      )
+                    : null}
+                </span>
               </>
             ) : null}
           </StatusCell>
