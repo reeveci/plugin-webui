@@ -187,6 +187,7 @@ function PipelineLogs({ pipeline, href, requestScroll }) {
       signal
       api
 
+      headline
       description
 
       prepare
@@ -209,7 +210,7 @@ function PipelineLogs({ pipeline, href, requestScroll }) {
     */
 
     (logs || "").split("\n").forEach((line) => {
-      if (line.startsWith("[description]")) {
+      if (line.startsWith("[headline]") || line.startsWith("[description]")) {
         return;
       }
 
