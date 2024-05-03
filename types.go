@@ -29,8 +29,8 @@ type PipelineSummaryResponse struct {
 	ID        string                `json:"id"`
 	Name      string                `json:"name"`
 	Headline  string                `json:"headline"`
-	StartTime time.Time             `json:"startTime"`
-	EndTime   time.Time             `json:"endTime"`
+	StartTime *time.Time            `json:"startTime"`
+	EndTime   *time.Time            `json:"endTime"`
 	Status    schema.Status         `json:"status"`
 	Result    schema.PipelineResult `json:"result"`
 }

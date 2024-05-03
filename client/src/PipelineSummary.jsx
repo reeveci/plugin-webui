@@ -111,9 +111,13 @@ function PipelineSummary({ pipeline, href }) {
           </StatusCell>
 
           <StatusCell width="30%">
-            {new Date(pipeline.startTime).toLocaleDateString("en-US")}
-            <br />
-            {new Date(pipeline.startTime).toLocaleTimeString("en-US")}
+            {pipeline.startTime ? (
+              <>
+                {new Date(pipeline.startTime).toLocaleDateString("en-US")}
+                <br />
+                {new Date(pipeline.startTime).toLocaleTimeString("en-US")}
+              </>
+            ) : null}
           </StatusCell>
 
           <StatusCell width="50%">
@@ -122,7 +126,7 @@ function PipelineSummary({ pipeline, href }) {
                 Status {pipeline.result.exitCode}
                 <br />
                 <span>
-                  {pipeline.endTime
+                  {pipeline.startTime && pipeline.endTime
                     ? formatDuration(
                         new Date(pipeline.startTime),
                         new Date(pipeline.endTime),

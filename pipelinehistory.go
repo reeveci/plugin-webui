@@ -27,7 +27,7 @@ type PipelineHistory struct {
 type HistoryEntry struct {
 	schema.PipelineStatus
 
-	StartTime, EndTime time.Time
+	StartTime, EndTime *time.Time
 	Logs               schema.LogReaderProvider
 }
 
@@ -47,9 +47,10 @@ func (p *PipelineHistory) Put(status schema.PipelineStatus) *HistoryEntry {
 	}
 
 	if entry == nil {
+		now := time.Now()
 		entry = &HistoryEntry{
 			PipelineStatus: status,
-			StartTime:      time.Now(),
+			StartTime:      &now,
 			Logs:           nil,
 		}
 
@@ -78,7 +79,8 @@ func (p *PipelineHistory) Put(status schema.PipelineStatus) *HistoryEntry {
 	}
 
 	if status.Finished() {
-		entry.EndTime = time.Now()
+		now := time.Now()
+		entry.EndTime = &now
 		p.cleanup(status.WorkerGroup)
 	}
 
