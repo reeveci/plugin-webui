@@ -1,10 +1,11 @@
 import { useConfigContext, useResource } from "@civet/core";
 import { faAngleDown, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import debounce from "lodash.debounce";
 import React from "react";
 import styled, { css, keyframes } from "styled-components";
 import { useAutoUpdate } from "../Civet";
-import { Button } from "../styles";
+import { Button, Input } from "../styles";
 
 const ActionsPage = styled.div`
   flex: 1 0 0px;
@@ -139,14 +140,76 @@ const StatusMessage = styled.p`
   text-align: center;
 `;
 
-function getActions(data) {
+function search(data, terms) {
+  let s;
+
+  const searchGroup = (name, group, terms) => {
+    if (!terms.length) return {};
+    const remainingTerms = terms.filter(
+      (term) => !name.replace(/-/g, " ").toLowerCase().includes(term),
+    );
+    if (remainingTerms.length) return s(group, remainingTerms);
+    return group;
+  };
+
+  const searchActions = (actions, terms) => {
+    if (!terms.length) return [];
+    return actions.filter((action) =>
+      terms.every((term) =>
+        (action.name || action.id)
+          ?.replace(/-/g, " ")
+          .toLowerCase()
+          .includes(term),
+      ),
+    );
+  };
+
+  s = (data, terms) => {
+    const groups = Object.entries(data?.groups ?? {})
+      .map(([name, item]) => [name, searchGroup(name, item, terms)])
+      .filter(([, { groups, actions }]) => groups || actions?.length);
+    return {
+      groups: groups.length ? Object.fromEntries(groups) : undefined,
+      actions: searchActions(data?.actions ?? [], terms),
+    };
+  };
+
+  return s(data, terms);
+}
+
+function getActions(data, query) {
   if (!data?.actions?.length && !Object.keys(data?.groups || {}).length) {
     return [];
   }
+  if (query?.search?.trim())
+    return [
+      search(
+        data,
+        query.search
+          .split(" ")
+          .filter(Boolean)
+          .map((term) => term.replace(/-/g, " ").toLowerCase()),
+      ),
+    ];
   return [data];
 }
 
 function Actions() {
+  const [search, setSearch] = React.useState("");
+
+  const handleSearchChange = React.useCallback((event) => {
+    setSearch(event.target.value || "");
+  }, []);
+
+  const [debouncedSearch, setDebouncedSearch] = React.useState("");
+  const updateDebouncedSearch = React.useMemo(
+    () => debounce(setDebouncedSearch, 500),
+    [],
+  );
+  React.useEffect(() => {
+    updateDebouncedSearch(search);
+  }, [updateDebouncedSearch, search]);
+
   const {
     data: [actions],
     isLoading,
@@ -155,7 +218,9 @@ function Actions() {
     notify,
   } = useResource({
     name: "actions",
+    query: { search: debouncedSearch },
     options: { getItems: getActions },
+    persistent: true,
   });
 
   useAutoUpdate(notify, 5000);
@@ -164,6 +229,16 @@ function Actions() {
     <ActionsPage>
       {actions != null ? (
         <PageContent>
+          <Input
+            placeholder="Search"
+            aria-label="Search"
+            type="text"
+            name="search"
+            autoFocus
+            value={search}
+            onChange={handleSearchChange}
+          />
+
           <Table>
             <TableContent>
               <ContentRow>

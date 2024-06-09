@@ -41,7 +41,7 @@ class UIDataProvider extends DataProvider {
         .accept("json")
         .set("Authorization", `Bearer ${this.token}`);
 
-      return options.getItems(res.body);
+      return options.getItems(res.body, query);
     } catch (err) {
       if (err.status === 401) {
         clearCookie(TOKEN_COOKIE);
