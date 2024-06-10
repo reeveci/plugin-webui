@@ -423,11 +423,7 @@ function EnvItemRow({
   const handleUnset = React.useCallback(async () => {
     if (!unsetPromptID) return;
 
-    if (
-      !confirm(
-        `Are you sure you want to delete ${name}?\nThis cannot be undone.`,
-      )
-    ) {
+    if (!confirm(`Are you sure you want to delete ${name}?`)) {
       return;
     }
 
