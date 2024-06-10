@@ -211,8 +211,9 @@ function getActions(data, query) {
           .filter(Boolean)
           .map((term) => term.replace(/-/g, " ").toLowerCase()),
       ),
+      data,
     ];
-  return [data];
+  return [data, data];
 }
 
 function Actions() {

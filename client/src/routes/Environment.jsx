@@ -150,6 +150,7 @@ const StatusMessage = styled.p`
 `;
 
 const PromptSection = styled.div`
+  z-index: 1;
   position: sticky;
   bottom: 1rem;
   background-color: #f7f7f7b2;
@@ -204,6 +205,12 @@ const PromptControl = styled.td`
   font-size: 0.9em;
 `;
 
+const PromptSelectSection = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
+
 const PromptSelect = styled.select`
   margin: 0 0.25rem 1rem 0.25rem;
   text-transform: capitalize;
@@ -236,8 +243,9 @@ function getEnvironment(data, query) {
           .filter(Boolean)
           .map((term) => term.replace(/-/g, " ").toLowerCase()),
       ),
+      data,
     ];
-  return [data];
+  return [data, data];
 }
 
 function Environment() {
@@ -257,7 +265,7 @@ function Environment() {
   }, [updateDebouncedSearch, search]);
 
   const {
-    data: [env],
+    data: [env, unfiltered],
     isLoading,
     isInitial,
     error,
@@ -269,7 +277,7 @@ function Environment() {
     persistent: true,
   });
 
-  useAutoUpdate(notify, 5000);
+  useAutoUpdate(notify, 2000);
 
   const prompts = React.useMemo(() => {
     const map = {};
@@ -297,6 +305,17 @@ function Environment() {
     });
     return map;
   }, [env]);
+
+  const known = React.useMemo(() => {
+    const map = {};
+    Object.entries(unfiltered?.env ?? {})?.forEach(([name, entries]) => {
+      entries.forEach(({ plugin }) => {
+        if (!Object.hasOwn(map, plugin)) map[plugin] = [];
+        map[plugin].push(name);
+      });
+    });
+    return map;
+  }, [unfiltered]);
 
   return (
     <EnvironmentPage>
@@ -341,7 +360,7 @@ function Environment() {
 
         {!error && prompts.length ? (
           <PromptSection>
-            <Prompt prompts={prompts} />
+            <Prompt prompts={prompts} known={known} />
           </PromptSection>
         ) : null}
       </PageContent>
@@ -404,6 +423,14 @@ function EnvItemRow({
   const handleUnset = React.useCallback(async () => {
     if (!unsetPromptID) return;
 
+    if (
+      !confirm(
+        `Are you sure you want to delete ${name}?\nThis cannot be undone.`,
+      )
+    ) {
+      return;
+    }
+
     try {
       await dataProvider.create(
         `prompts/${encodeURIComponent(unsetPromptID)}`,
@@ -459,7 +486,7 @@ function EnvItemRow({
   );
 }
 
-function Prompt({ prompts }) {
+function Prompt({ prompts, known }) {
   const { dataProvider } = useConfigContext();
 
   const [type, setType] = React.useState(prompts[0].key);
@@ -496,9 +523,20 @@ function Prompt({ prompts }) {
   if (!secret && !prompt.variable) setSecret(true);
 
   const promptID = prompt?.[secret ? "secret" : "variable"];
+  const alreadySet = React.useMemo(() => {
+    if (!name || !prompt?.plugin) return false;
+    return known[prompt?.plugin]?.includes(name);
+  }, [name, known, prompt]);
 
   const handleSet = React.useCallback(async () => {
     if (!promptID) return;
+
+    if (
+      alreadySet &&
+      !confirm(`${name} is already set.\nDo you want to replace it?`)
+    ) {
+      return;
+    }
 
     try {
       await dataProvider.create(`prompts/${encodeURIComponent(promptID)}`, {
@@ -511,22 +549,24 @@ function Prompt({ prompts }) {
     } catch {
       // do nothing
     }
-  }, [dataProvider, promptID, name, value]);
+  }, [alreadySet, dataProvider, promptID, name, value]);
 
   return (
     <>
-      <PromptSelect
-        aria-label="Type"
-        name="type"
-        value={type}
-        onChange={handleTypeChange}
-      >
-        {prompts.map(({ key, name, plugin }) => (
-          <option key={key} value={key}>
-            {name} ({plugin})
-          </option>
-        ))}
-      </PromptSelect>
+      <PromptSelectSection>
+        <PromptSelect
+          aria-label="Type"
+          name="type"
+          value={type}
+          onChange={handleTypeChange}
+        >
+          {prompts.map(({ key, name, plugin }) => (
+            <option key={key} value={key}>
+              {name} ({plugin})
+            </option>
+          ))}
+        </PromptSelect>
+      </PromptSelectSection>
 
       <PromptTable>
         <PromptTableContent>
