@@ -128,6 +128,7 @@ export const Button = styled.button`
   color: #3992ff;
   font-weight: 500;
   user-select: none;
+  -webkit-user-select: none;
 
   &:active {
     box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);

@@ -953,6 +953,7 @@ Possible causes: the network is offline, Origin is not allowed by Access-Control
   color: #3992ff;
   font-weight: 500;
   user-select: none;
+  -webkit-user-select: none;
 
   &:active {
     box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
@@ -1239,6 +1240,7 @@ Possible causes: the network is offline, Origin is not allowed by Access-Control
   text-transform: uppercase;
   color: #3992ff;
   user-select: none;
+  -webkit-user-select: none;
   cursor: pointer;
 
   &:hover {
@@ -1280,6 +1282,7 @@ Possible causes: the network is offline, Origin is not allowed by Access-Control
 `,O8=oe(ta)`
   min-width: 5rem;
   user-select: none;
+  -webkit-user-select: none;
   text-transform: capitalize;
   border: 1px solid transparent;
 
@@ -1336,12 +1339,18 @@ Possible causes: the network is offline, Origin is not allowed by Access-Control
   font-stretch: semi-condensed;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: inherit;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: 0.4s color ease-out;
 
   ${({onClick:e})=>e?`
-        color: #3992ff;
-        user-select: none;
         cursor: pointer;
-      `:""}
+
+        &:hover {
+          color: #3992ff;
+        }
+        `:""}
 `,x_=oe.td`
   padding: 0.5rem;
   max-width: 0px;
@@ -1378,7 +1387,7 @@ Possible causes: the network is offline, Origin is not allowed by Access-Control
   margin: 1rem auto;
   padding: 2rem 0;
   text-align: center;
-`;function Y8(e,t){const n=Object.entries((e==null?void 0:e.env)??{}).filter(([r])=>t.every(a=>r.replace(/-/g," ").toLowerCase().includes(a)));return{env:n.length?Object.fromEntries(n):void 0,prompts:e==null?void 0:e.prompts}}function q8(e,t){var n;return Object.keys((e==null?void 0:e.env)||{}).length?(n=t==null?void 0:t.search)!=null&&n.trim()?[Y8(e,t.search.split(" ").filter(Boolean).map(r=>r.replace(/-/g," ").toLowerCase()))]:[e]:[]}function K8(){const[e,t]=me.useState(""),n=me.useCallback(d=>{t(d.target.value||"")},[]),[r,a]=me.useState(""),i=me.useMemo(()=>HR(a,500),[]);me.useEffect(()=>{i(e)},[i,e]);const{data:[o],isLoading:s,isInitial:u,error:l,notify:c}=Xo({name:"environment",query:{search:r},options:{getItems:q8},persistent:!0});return ll(c,5e3),B.jsx($8,{children:B.jsxs(H8,{children:[B.jsx(z8,{children:B.jsx(Ld,{placeholder:"Search","aria-label":"Search",type:"text",name:"search",autoFocus:!0,value:e,onChange:n})}),!l&&Object.keys((o==null?void 0:o.env)??{}).length?B.jsx(j8,{children:B.jsx(G8,{children:Object.entries(o.env).map(([d,[f,...m]])=>B.jsx(X8,{name:d,...f,more:m},d))})}):B.jsx(V8,{children:B.jsx("i",{children:l?`Error loading environment variables: ${l.statusText||l.message}`:s&&u?"Loading...":"No environment variables available"})})]})})}function X8({name:e,plugin:t,priority:n,secret:r,value:a,more:i}){const[o,s]=me.useState(!0),u=me.useCallback(()=>{s(l=>!l)},[]);return B.jsxs(B.Fragment,{children:[B.jsxs(YR,{title:e,children:[i.length?B.jsxs(tm,{width:"30%",onClick:u,children:[e," ",B.jsx(Dt,{icon:o?Qu:Ju,size:"xs"})]}):B.jsx(tm,{width:"30%",children:e}),B.jsxs(x_,{width:"20%",children:[B.jsx("i",{children:t})," ",B.jsxs("small",{title:"Priority",children:["(",n||0,")"]})]}),B.jsx(gg,{width:"50%",title:r?"[secret] •••••••":a,children:r?B.jsxs(B.Fragment,{children:[B.jsx(Dt,{icon:_h,size:"xs"})," •••••••"]}):a})]}),o?null:i.map(l=>B.jsxs(W8,{title:e,children:[B.jsx(tm,{width:"30%"}),B.jsxs(x_,{width:"20%",children:[B.jsx("i",{children:l.plugin})," ",B.jsxs("small",{children:["(",n,")"]})]}),B.jsx(gg,{width:"50%",title:l.secret?"[secret] •••••••":l.value,children:l.secret?B.jsxs(B.Fragment,{children:[B.jsx(Dt,{icon:_h,size:"xs"})," •••••••"]}):l.value})]},l.plugin))]})}const Z8=oe.div`
+`;function Y8(e,t){const n=Object.entries((e==null?void 0:e.env)??{}).filter(([r])=>t.every(a=>r.replace(/-/g," ").toLowerCase().includes(a)));return{env:n.length?Object.fromEntries(n):void 0,prompts:e==null?void 0:e.prompts}}function q8(e,t){var n;return Object.keys((e==null?void 0:e.env)||{}).length?(n=t==null?void 0:t.search)!=null&&n.trim()?[Y8(e,t.search.split(" ").filter(Boolean).map(r=>r.replace(/-/g," ").toLowerCase()))]:[e]:[]}function K8(){const[e,t]=me.useState(""),n=me.useCallback(d=>{t(d.target.value||"")},[]),[r,a]=me.useState(""),i=me.useMemo(()=>HR(a,500),[]);me.useEffect(()=>{i(e)},[i,e]);const{data:[o],isLoading:s,isInitial:u,error:l,notify:c}=Xo({name:"environment",query:{search:r},options:{getItems:q8},persistent:!0});return ll(c,5e3),B.jsx($8,{children:B.jsxs(H8,{children:[B.jsx(z8,{children:B.jsx(Ld,{placeholder:"Search","aria-label":"Search",type:"text",name:"search",autoFocus:!0,value:e,onChange:n})}),!l&&Object.keys((o==null?void 0:o.env)??{}).length?B.jsx(j8,{children:B.jsx(G8,{children:Object.entries(o.env).map(([d,[f,...m]])=>B.jsx(X8,{name:d,...f,more:m},d))})}):B.jsx(V8,{children:B.jsx("i",{children:l?`Error loading environment variables: ${l.statusText||l.message}`:s&&u?"Loading...":"No environment variables available"})})]})})}function X8({name:e,plugin:t,priority:n,secret:r,value:a,more:i}){const[o,s]=me.useState(!0),u=me.useCallback(()=>{s(l=>!l)},[]);return B.jsxs(B.Fragment,{children:[B.jsxs(YR,{title:e,children:[i.length?B.jsxs(tm,{width:"30%",onClick:u,children:[B.jsx(Dt,{icon:o?Qu:Ju,fixedWidth:!0,size:"sm"}),e]}):B.jsx(tm,{width:"30%",children:e}),B.jsxs(x_,{width:"20%",children:[B.jsx("i",{children:t})," ",B.jsxs("small",{title:"Priority",children:["(",n||0,")"]})]}),B.jsx(gg,{width:"50%",title:r?"[secret] •••••••":a,children:r?B.jsxs(B.Fragment,{children:[B.jsx(Dt,{icon:_h,size:"xs"})," •••••••"]}):a})]}),o?null:i.map(l=>B.jsxs(W8,{title:e,children:[B.jsx(tm,{width:"30%"}),B.jsxs(x_,{width:"20%",children:[B.jsx("i",{children:l.plugin})," ",B.jsxs("small",{children:["(",n,")"]})]}),B.jsx(gg,{width:"50%",title:l.secret?"[secret] •••••••":l.value,children:l.secret?B.jsxs(B.Fragment,{children:[B.jsx(Dt,{icon:_h,size:"xs"})," •••••••"]}):l.value})]},l.plugin))]})}const Z8=oe.div`
   flex: 1 0 0px;
   min-width: 0px;
   height: 100%;
@@ -1462,6 +1471,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   text-transform: uppercase;
   color: #3992ff;
   user-select: none;
+  -webkit-user-select: none;
   cursor: pointer;
 
   &:hover {
@@ -1499,6 +1509,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   text-transform: uppercase;
   color: #3992ff;
   user-select: none;
+  -webkit-user-select: none;
   cursor: pointer;
 
   &:hover {
@@ -1539,6 +1550,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   text-transform: uppercase;
   color: #3992ff;
   user-select: none;
+  -webkit-user-select: none;
   cursor: pointer;
 
   &:hover {

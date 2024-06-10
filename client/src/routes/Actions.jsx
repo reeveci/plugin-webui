@@ -77,6 +77,7 @@ const Header = styled.td`
   text-transform: uppercase;
   color: #3992ff;
   user-select: none;
+  -webkit-user-select: none;
   cursor: pointer;
 
   &:hover {
@@ -130,6 +131,7 @@ const errorAnimation = css`
 const ActionButton = styled(Button)`
   min-width: 5rem;
   user-select: none;
+  -webkit-user-select: none;
   text-transform: capitalize;
   border: 1px solid transparent;
 

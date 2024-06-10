@@ -67,14 +67,20 @@ const EnvKey = styled.td`
   font-stretch: semi-condensed;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: inherit;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: 0.4s color ease-out;
 
   ${({ onClick }) =>
     onClick
       ? `
-        color: #3992ff;
-        user-select: none;
         cursor: pointer;
-      `
+
+        &:hover {
+          color: #3992ff;
+        }
+        `
       : ""}
 `;
 
@@ -232,11 +238,12 @@ function EnvItem({ name, plugin, priority, secret, value, more }) {
       <EnvRow title={name}>
         {more.length ? (
           <EnvKey width="30%" onClick={toggle}>
-            {name}{" "}
             <FontAwesomeIcon
               icon={collapsed ? faAngleRight : faAngleDown}
-              size="xs"
+              fixedWidth
+              size="sm"
             />
+            {name}
           </EnvKey>
         ) : (
           <EnvKey width="30%">{name}</EnvKey>

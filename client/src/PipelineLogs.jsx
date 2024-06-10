@@ -32,6 +32,7 @@ const SetupHeader = styled.td`
   text-transform: uppercase;
   color: #3992ff;
   user-select: none;
+  -webkit-user-select: none;
   cursor: pointer;
 
   &:hover {
