@@ -114,12 +114,18 @@ const EnvValue = styled.td`
   @media (prefers-color-scheme: dark) {
     background-color: #232323;
   }
-`;
 
-const EnvSubRow = styled(EnvRow)`
-  & > ${EnvValue} {
-    background-color: transparent;
-  }
+  ${({ $sub }) =>
+    $sub
+      ? `
+        background-color: transparent;
+        border: 1px solid #f7f7f7;
+
+        @media (prefers-color-scheme: dark) {
+          border-color: #232323;
+        }
+      `
+      : ""}
 `;
 
 const StatusMessage = styled.p`
@@ -205,7 +211,7 @@ function Env() {
           <Table>
             <TableContent>
               {Object.entries(env.env).map(([key, [entry, ...subEntries]]) => (
-                <EnvItem key={key} name={key} {...entry} more={subEntries} />
+                <EnvItem key={key} name={key} entry={entry} more={subEntries} />
               ))}
             </TableContent>
           </Table>
@@ -227,7 +233,7 @@ function Env() {
 
 export default Env;
 
-function EnvItem({ name, plugin, priority, secret, value, more }) {
+function EnvItem({ name, entry, more }) {
   const [collapsed, setCollapsed] = React.useState(true);
   const toggle = React.useCallback(() => {
     setCollapsed((collapsed) => !collapsed);
@@ -235,59 +241,64 @@ function EnvItem({ name, plugin, priority, secret, value, more }) {
 
   return (
     <>
-      <EnvRow title={name}>
-        {more.length ? (
-          <EnvKey width="30%" onClick={toggle}>
-            <FontAwesomeIcon
-              icon={collapsed ? faAngleRight : faAngleDown}
-              fixedWidth
-              size="sm"
-            />
-            {name}
-          </EnvKey>
-        ) : (
-          <EnvKey width="30%">{name}</EnvKey>
-        )}
-
-        <EnvPlugin width="20%">
-          <i>{plugin}</i> <small title="Priority">({priority || 0})</small>
-        </EnvPlugin>
-
-        <EnvValue width="50%" title={secret ? "[secret] •••••••" : value}>
-          {secret ? (
-            <>
-              <FontAwesomeIcon icon={faLock} size="xs" /> •••••••
-            </>
-          ) : (
-            value
-          )}
-        </EnvValue>
-      </EnvRow>
+      <EnvItemRow
+        name={name}
+        {...entry}
+        collapsed={collapsed}
+        toggleCollapsed={more.length ? toggle : undefined}
+      />
 
       {collapsed
         ? null
         : more.map((entry) => (
-            <EnvSubRow key={entry.plugin} title={name}>
-              <EnvKey width="30%" />
-
-              <EnvPlugin width="20%">
-                <i>{entry.plugin}</i> <small>({priority})</small>
-              </EnvPlugin>
-
-              <EnvValue
-                width="50%"
-                title={entry.secret ? "[secret] •••••••" : entry.value}
-              >
-                {entry.secret ? (
-                  <>
-                    <FontAwesomeIcon icon={faLock} size="xs" /> •••••••
-                  </>
-                ) : (
-                  entry.value
-                )}
-              </EnvValue>
-            </EnvSubRow>
+            <EnvItemRow key={entry.plugin} sub name={name} {...entry} />
           ))}
     </>
+  );
+}
+
+function EnvItemRow({
+  name,
+  plugin,
+  priority,
+  secret,
+  value,
+  sub,
+  collapsed,
+  toggleCollapsed,
+}) {
+  return (
+    <EnvRow title={`${name} - ${plugin} (Priority ${priority || 0})`}>
+      {toggleCollapsed ? (
+        <EnvKey width="30%" onClick={toggleCollapsed}>
+          <FontAwesomeIcon
+            icon={collapsed ? faAngleRight : faAngleDown}
+            fixedWidth
+            size="sm"
+          />
+          {sub ? null : name}
+        </EnvKey>
+      ) : (
+        <EnvKey width="30%">{sub ? null : name}</EnvKey>
+      )}
+
+      <EnvPlugin width="20%">
+        <i>{plugin}</i> <small>({priority || 0})</small>
+      </EnvPlugin>
+
+      <EnvValue
+        $sub={sub}
+        width="50%"
+        title={secret ? "[secret] •••••••" : value}
+      >
+        {secret ? (
+          <>
+            <FontAwesomeIcon icon={faLock} size="xs" /> •••••••
+          </>
+        ) : (
+          value
+        )}
+      </EnvValue>
+    </EnvRow>
   );
 }
