@@ -11,7 +11,7 @@ import styled from "styled-components";
 import { useAutoUpdate } from "../Civet";
 import { Input } from "../styles";
 
-const EnvPage = styled.div`
+const EnvironmentPage = styled.div`
   flex: 1 0 0px;
   min-width: 0px;
   height: 100%;
@@ -139,12 +139,12 @@ function search(data, terms) {
     terms.every((term) => name.replace(/-/g, " ").toLowerCase().includes(term)),
   );
   return {
+    ...data,
     env: env.length ? Object.fromEntries(env) : undefined,
-    prompts: data?.prompts,
   };
 }
 
-function getEnv(data, query) {
+function getEnvironment(data, query) {
   if (!Object.keys(data?.env || {}).length) {
     return [];
   }
@@ -161,7 +161,7 @@ function getEnv(data, query) {
   return [data];
 }
 
-function Env() {
+function Environment() {
   const [search, setSearch] = React.useState("");
 
   const handleSearchChange = React.useCallback((event) => {
@@ -186,14 +186,14 @@ function Env() {
   } = useResource({
     name: "environment",
     query: { search: debouncedSearch },
-    options: { getItems: getEnv },
+    options: { getItems: getEnvironment },
     persistent: true,
   });
 
   useAutoUpdate(notify, 5000);
 
   return (
-    <EnvPage>
+    <EnvironmentPage>
       <PageContent>
         <SearchSection>
           <Input
@@ -227,11 +227,11 @@ function Env() {
           </StatusMessage>
         )}
       </PageContent>
-    </EnvPage>
+    </EnvironmentPage>
   );
 }
 
-export default Env;
+export default Environment;
 
 function EnvItem({ name, entry, more }) {
   const [collapsed, setCollapsed] = React.useState(true);

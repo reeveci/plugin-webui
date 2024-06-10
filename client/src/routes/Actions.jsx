@@ -188,6 +188,7 @@ function search(data, terms) {
       .map(([name, item]) => [name, searchGroup(name, item, terms)])
       .filter(([, { groups, actions }]) => groups || actions?.length);
     return {
+      ...data,
       groups: groups.length ? Object.fromEntries(groups) : undefined,
       actions: searchActions(data?.actions ?? [], terms),
     };
