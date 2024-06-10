@@ -109,7 +109,7 @@ func (s *EnvStore) Register(plugin string, bundle EnvBundle) error {
 	if len(bundle.Env) == 0 {
 		delete(s.EnvBundles, bundleHandle)
 	} else {
-		storedBundle := make([]*StoredEnv, len(bundle.Env))
+		storedBundle := make([]*StoredEnv, 0, len(bundle.Env))
 
 		for name, env := range bundle.Env {
 			envHandle := plugin + "-" + name
