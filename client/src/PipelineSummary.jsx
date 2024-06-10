@@ -57,13 +57,13 @@ const StyledLink = styled(Link)`
   color: inherit;
   text-decoration: none;
 
-  > ${Card} {
+  & > ${Card} {
     box-shadow:
       0 0px 1px hsla(0, 0%, 0%, 0.2),
       0 1px 2px hsla(0, 0%, 0%, 0.2);
   }
 
-  > ${Card}:hover {
+  & > ${Card}:hover {
     box-shadow:
       0 0px 1px hsla(0, 0%, 0%, 0.6),
       0 1px 2px hsla(0, 0%, 0%, 0.2);
@@ -73,7 +73,7 @@ const StyledLink = styled(Link)`
     }
   }
 
-  > ${Card}:active {
+  & > ${Card}:active {
     box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
     transform: translateY(1px);
   }

@@ -105,6 +105,7 @@ const Header = styled.h2`
   padding: 0.83em 2rem;
   background-color: #f7f7f7b2;
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   text-align: start;
   font-size: 1rem;
   font-weight: normal;
@@ -261,6 +262,10 @@ function App() {
           <NavList>
             <NavItem href="actions" closeMenu={closeMenu}>
               Actions
+            </NavItem>
+
+            <NavItem href="environment" closeMenu={closeMenu}>
+              Environment
             </NavItem>
           </NavList>
         </Nav>

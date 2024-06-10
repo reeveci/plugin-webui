@@ -112,20 +112,20 @@ func (s *ActionStore) Register(plugin string, bundle ActionBundle) error {
 	return nil
 }
 
-type ByName []FullAction
+type ActionByName []FullAction
 
-func (s ByName) Len() int {
+func (s ActionByName) Len() int {
 	return len(s)
 }
 
-func (s ByName) Less(i, j int) bool {
+func (s ActionByName) Less(i, j int) bool {
 	if s[i].Name == s[j].Name {
 		return s[i].Plugin < s[j].Plugin
 	}
 	return s[i].Name < s[j].Name
 }
 
-func (s ByName) Swap(i, j int) {
+func (s ActionByName) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
 }
 
@@ -134,7 +134,7 @@ func (s *ActionStore) apply() {
 	for _, action := range s.Actions {
 		actions = append(actions, action.FullAction)
 	}
-	sort.Sort(ByName(actions))
+	sort.Sort(ActionByName(actions))
 
 	data := new(ClientActionTreeNode)
 

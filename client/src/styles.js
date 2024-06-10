@@ -102,6 +102,7 @@ const elementStyle = css`
   background-color: white;
   line-height: 1.5;
   margin: 0;
+  color: inherit;
 
   &:hover {
     box-shadow:

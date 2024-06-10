@@ -7,6 +7,7 @@ import {
 import App from "./App";
 import Error from "./Error";
 import Actions from "./routes/Actions";
+import Environment from "./routes/Environment";
 import Index from "./routes/Index";
 import Pipeline from "./routes/Pipeline";
 import WorkerGroup from "./routes/WorkerGroup";
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
           element={<Pipeline />}
         />
         <Route path="actions" element={<Actions />} />
+        <Route path="environment" element={<Environment />} />
       </Route>
     </Route>,
   ),

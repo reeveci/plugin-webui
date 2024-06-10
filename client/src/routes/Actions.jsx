@@ -25,6 +25,23 @@ const PageContent = styled.div`
   }
 `;
 
+const SearchSection = styled.div`
+  position: sticky;
+  top: 1rem;
+  background-color: #f7f7f7b2;
+  border-radius: 8px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 1rem;
+  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
+  margin: 1rem auto;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #232323b2;
+    border-bottom-color: #5c5c5c;
+  }
+`;
+
 const ActionSection = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -129,14 +146,14 @@ const ActionButton = styled(Button)`
     }
   }}
 
-  > i {
+  & > i {
     font-size: 0.9em;
   }
 `;
 
 const StatusMessage = styled.p`
-  margin: 2rem auto;
-  padding: 2rem 4rem;
+  margin: 1rem auto;
+  padding: 2rem 0;
   text-align: center;
 `;
 
@@ -227,8 +244,8 @@ function Actions() {
 
   return (
     <ActionsPage>
-      {actions != null ? (
-        <PageContent>
+      <PageContent>
+        <SearchSection>
           <Input
             placeholder="Search"
             aria-label="Search"
@@ -238,7 +255,11 @@ function Actions() {
             value={search}
             onChange={handleSearchChange}
           />
+        </SearchSection>
 
+        {!error &&
+        (Object.keys(actions?.groups ?? {}).length ||
+          actions?.actions?.length) ? (
           <Table>
             <TableContent>
               <ContentRow>
@@ -248,18 +269,18 @@ function Actions() {
               </ContentRow>
             </TableContent>
           </Table>
-        </PageContent>
-      ) : (
-        <StatusMessage>
-          <i>
-            {error
-              ? `Error loading actions: ${error.statusText || error.message}`
-              : isLoading && isInitial
-                ? "Loading..."
-                : "No actions available"}
-          </i>
-        </StatusMessage>
-      )}
+        ) : (
+          <StatusMessage>
+            <i>
+              {error
+                ? `Error loading actions: ${error.statusText || error.message}`
+                : isLoading && isInitial
+                  ? "Loading..."
+                  : "No actions available"}
+            </i>
+          </StatusMessage>
+        )}
+      </PageContent>
     </ActionsPage>
   );
 }

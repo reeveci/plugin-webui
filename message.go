@@ -24,6 +24,22 @@ func (p *WebUIPlugin) Message(source string, message schema.Message) error {
 		if err != nil {
 			return fmt.Errorf("error registering actions - %s", err)
 		}
+
+	case "env":
+		if !schema.IsMessageFromPlugin(source) {
+			return nil
+		}
+
+		var env EnvBundle
+		err := json.Unmarshal(message.Data, &env)
+		if err != nil {
+			return fmt.Errorf("invalid env message - error parsing env - %s", err)
+		}
+
+		err = p.Env.Register(source, env)
+		if err != nil {
+			return fmt.Errorf("error registering env - %s", err)
+		}
 	}
 
 	return nil

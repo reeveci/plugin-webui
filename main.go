@@ -18,6 +18,7 @@ func main() {
 			JWTSecret: GenerateTokenSecret(),
 			History:   NewPipelineHistory(10),
 			Actions:   NewActionStore(),
+			Env:       NewEnvStore(),
 		},
 
 		Logger: log,
@@ -36,6 +37,7 @@ type WebUIPlugin struct {
 	JWTSecret string
 	History   *PipelineHistory
 	Actions   *ActionStore
+	Env       *EnvStore
 }
 
 func (p *WebUIPlugin) Name() (string, error) {

@@ -29,6 +29,8 @@ func Serve(p *WebUIPlugin) {
 	api.HandleFunc("/pipelines/{workerGroup}/{id}/logs", CorsHandler(p, AuthValidator(p, HandlePipelineLogs(p)), http.MethodGet))
 	api.HandleFunc("/actions", CorsHandler(p, AuthValidator(p, HandleActions(p)), http.MethodGet))
 	api.HandleFunc("/actions/{id}", CorsHandler(p, AuthValidator(p, HandleTriggerAction(p)), http.MethodPost))
+	api.HandleFunc("/environment", CorsHandler(p, AuthValidator(p, HandleEnvironment(p)), http.MethodGet))
+	// api.HandleFunc("/environment/{name}", CorsHandler(p, AuthValidator(p, HandleSetEnv(p)), http.MethodPut))
 
 	http.HandleFunc(API_PATH+"/", OmitTrailingSlash(http.StripPrefix(API_PATH, api)))
 	http.HandleFunc(API_PREFIX+"/", func(w http.ResponseWriter, r *http.Request) {
