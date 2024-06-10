@@ -26,15 +26,16 @@ const PageContent = styled.div`
 `;
 
 const SearchSection = styled.div`
+  z-index: 1;
   position: sticky;
   top: 1rem;
   background-color: #f7f7f7b2;
   border-radius: 8px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  padding: 1rem;
+  padding: 0.75rem;
   box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
-  margin: 1rem auto;
+  margin: 1rem -0.5rem;
 
   @media (prefers-color-scheme: dark) {
     background-color: #232323b2;

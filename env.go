@@ -61,7 +61,7 @@ type ClientPrompt struct {
 
 type ClientEnvData struct {
 	Env     map[string][]ClientEnv `json:"env"`
-	Prompts []ClientPrompt         `json:"groups"`
+	Prompts []ClientPrompt         `json:"prompts"`
 }
 
 func NewEnvStore() *EnvStore {

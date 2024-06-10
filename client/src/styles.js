@@ -104,7 +104,12 @@ const elementStyle = css`
   margin: 0;
   color: inherit;
 
-  &:hover {
+  &:disabled {
+    opacity: 0.8;
+    box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.2);
+  }
+
+  &:not(:disabled):hover {
     box-shadow:
       0 0px 1px hsla(0, 0%, 0%, 0.6),
       0 1px 2px hsla(0, 0%, 0%, 0.2);
@@ -123,14 +128,14 @@ export const Input = styled.input`
   ${elementStyle}
 `;
 
-export const Button = styled.button`
+export const Button = styled.button.attrs({ tabIndex: 0 })`
   ${elementStyle}
   color: #3992ff;
   font-weight: 500;
   user-select: none;
   -webkit-user-select: none;
 
-  &:active {
+  &:not(:disabled):active {
     box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
     transform: translateY(1px);
   }

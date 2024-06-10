@@ -141,7 +141,13 @@ function PipelineSummary({ pipeline, href }) {
     </Card>
   );
 
-  return href ? <StyledLink to={href}>{content}</StyledLink> : content;
+  return href ? (
+    <StyledLink to={href} tabIndex={0}>
+      {content}
+    </StyledLink>
+  ) : (
+    content
+  );
 }
 
 export default PipelineSummary;
