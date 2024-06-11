@@ -149,6 +149,9 @@ const StatusMessage = styled.p`
 const StyledButton = styled(Button)`
   font-size: 0.9em;
   padding: 0.5em 0.75em;
+`;
+
+const StyledBarButton = styled(StyledButton)`
   color: inherit;
 `;
 
@@ -301,9 +304,9 @@ function Actions() {
             onChange={handleSearchChange}
           />
 
-          <StyledButton onClick={handleSearchClear}>
+          <StyledBarButton onClick={handleSearchClear}>
             <FontAwesomeIcon icon={faX} fixedWidth />
-          </StyledButton>
+          </StyledBarButton>
         </SearchSection>
 
         {!error &&

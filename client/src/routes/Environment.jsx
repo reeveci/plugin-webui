@@ -130,6 +130,9 @@ const StatusMessage = styled.p`
 const StyledButton = styled(Button)`
   font-size: 0.9em;
   padding: 0.5em 0.75em;
+`;
+
+const StyledBarButton = styled(StyledButton)`
   color: inherit;
 `;
 
@@ -366,9 +369,9 @@ function Environment() {
             onChange={handleSearchChange}
           />
 
-          <StyledButton onClick={handleSearchClear}>
+          <StyledBarButton onClick={handleSearchClear}>
             <FontAwesomeIcon icon={faX} fixedWidth />
-          </StyledButton>
+          </StyledBarButton>
         </SearchSection>
 
         {!error && Object.keys(env?.env ?? {}).length ? (
@@ -647,9 +650,9 @@ function Prompt({ prompts, known }) {
             </PromptCell>
 
             <PromptControl width="15%">
-              <StyledButton disabled={!name || !value} onClick={handleSet}>
+              <StyledBarButton disabled={!name || !value} onClick={handleSet}>
                 <FontAwesomeIcon icon={faAdd} fixedWidth />
-              </StyledButton>
+              </StyledBarButton>
             </PromptControl>
           </PromptRow>
         </PromptTableContent>
