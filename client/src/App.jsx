@@ -43,7 +43,7 @@ const SideBar = styled.div`
     margin: 0 1rem;
   }
 
-  @media only screen and (min-width: 768px) {
+  @media (min-width: 768px) {
     width: 22rem;
     height: 100%;
 
@@ -52,7 +52,7 @@ const SideBar = styled.div`
     }
   }
 
-  @media only screen and (max-width: 767px) {
+  @media (max-width: 767.9px) {
     ${({ $menuVisible }) =>
       $menuVisible
         ? `
@@ -153,12 +153,12 @@ const NavMessage = styled.li`
 `;
 
 const Detail = styled.div`
-  @media only screen and (min-width: 768px) {
+  @media (min-width: 768px) {
     min-width: 0px;
     height: 100%;
   }
 
-  @media only screen and (max-width: 767px) {
+  @media (max-width: 767.9px) {
     ${({ $menuVisible }) =>
       $menuVisible
         ? `

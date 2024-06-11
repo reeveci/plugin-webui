@@ -17,7 +17,7 @@ const PageContent = styled.div`
   margin: 0px auto;
   padding: 2rem 4rem;
 
-  @media only screen and (max-width: 767px) {
+  @media (max-width: 767.9px) {
     padding: 1rem 2rem;
   }
 `;

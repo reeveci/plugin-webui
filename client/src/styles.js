@@ -36,7 +36,7 @@ const Styles = createGlobalStyle`
     height: 100%;
     width: 100%;
 
-    @media only screen and (min-width: 768px)  {
+    @media (min-width: 768px)  {
       flex-direction: row;
     }
   }

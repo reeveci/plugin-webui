@@ -65,7 +65,7 @@ const ErrorMessage = styled.p`
 const Label = styled.label`
   display: flex;
 
-  @media only screen and (max-width: 767px) {
+  @media (max-width: 767.9px) {
     flex-direction: column;
     gap: 0.25rem;
   }

@@ -24,7 +24,7 @@ const PageContent = styled.div`
   margin: 2rem auto;
   padding: 2rem 4rem;
 
-  @media only screen and (max-width: 767px) {
+  @media (max-width: 767.9px) {
     padding: 1rem 2rem;
   }
 `;
@@ -37,7 +37,7 @@ const ScrollBottomButton = styled(Button)`
   height: 3rem;
   border-radius: 50%;
 
-  @media only screen and (max-width: 767px) {
+  @media (max-width: 767.9px) {
     right: 2rem;
     bottom: 1rem;
   }

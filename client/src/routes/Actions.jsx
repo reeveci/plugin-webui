@@ -1,5 +1,9 @@
 import { useConfigContext, useResource } from "@civet/core";
-import { faAngleDown, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleDown,
+  faAngleRight,
+  faX,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import debounce from "lodash.debounce";
 import React from "react";
@@ -20,7 +24,7 @@ const PageContent = styled.div`
   margin: 1rem auto;
   padding: 2rem 4rem;
 
-  @media only screen and (max-width: 767px) {
+  @media (max-width: 767.9px) {
     padding: 1rem 2rem;
   }
 `;
@@ -76,7 +80,7 @@ const MainContent = styled.td`
   overflow: auto;
   padding: 0.5rem 0;
 
-  @media only screen and (max-width: 767px) {
+  @media (max-width: 767.9px) {
     padding: 0.25rem 0;
   }
 `;
@@ -90,7 +94,7 @@ const Content = styled(MainContent)`
     border-left-color: #5c5c5c;
   }
 
-  @media only screen and (max-width: 767px) {
+  @media (max-width: 767.9px) {
     padding-left: 1rem;
   }
 `;
@@ -142,9 +146,13 @@ const StatusMessage = styled.p`
   text-align: center;
 `;
 
+const StyledButton = styled(Button)`
+  font-size: 0.9em;
+  padding: 0.5em 0.75em;
+`;
+
 const Blur = styled.div`
   z-index: 1;
-  position: sticky;
   ${({ $position }) => $position || "top"}: 0;
   background-color: #ffffffb2;
   backdrop-filter: blur(20px);
@@ -155,11 +163,14 @@ const Blur = styled.div`
   @media (prefers-color-scheme: dark) {
     background-color: #161616b2;
   }
+
+  @media (min-height: 512px) {
+    position: sticky;
+  }
 `;
 
 const SearchSection = styled.div`
   z-index: 2;
-  position: sticky;
   top: 1rem;
   background-color: #f7f7f7b2;
   backdrop-filter: blur(20px);
@@ -168,10 +179,18 @@ const SearchSection = styled.div`
   padding: 0.75rem;
   box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
   margin: 1rem -0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
 
   @media (prefers-color-scheme: dark) {
     background-color: #232323b2;
     border-bottom-color: #5c5c5c;
+  }
+
+  @media (min-height: 512px) {
+    position: sticky;
   }
 `;
 
@@ -233,14 +252,16 @@ function getActions(data, query) {
 
 function Actions() {
   const [search, setSearch] = React.useState("");
-
   const handleSearchChange = React.useCallback((event) => {
     setSearch(event.target.value || "");
+  }, []);
+  const handleSearchClear = React.useCallback(() => {
+    setSearch("");
   }, []);
 
   const [debouncedSearch, setDebouncedSearch] = React.useState("");
   const updateDebouncedSearch = React.useMemo(
-    () => debounce(setDebouncedSearch, 500),
+    () => debounce(setDebouncedSearch, 100),
     [],
   );
   React.useEffect(() => {
@@ -269,6 +290,7 @@ function Actions() {
       <PageContent>
         <SearchSection>
           <Input
+            style={{ flexGrow: 1 }}
             placeholder="Search"
             aria-label="Search"
             type="text"
@@ -277,6 +299,10 @@ function Actions() {
             value={search}
             onChange={handleSearchChange}
           />
+
+          <StyledButton onClick={handleSearchClear}>
+            <FontAwesomeIcon icon={faX} fixedWidth />
+          </StyledButton>
         </SearchSection>
 
         {!error &&
