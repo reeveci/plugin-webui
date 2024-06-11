@@ -11,7 +11,7 @@ import debounce from "lodash.debounce";
 import React from "react";
 import styled from "styled-components";
 import { useAutoUpdate } from "../Civet";
-import { Button, Input } from "../styles";
+import { Button, Input, Select } from "../styles";
 
 const EnvironmentPage = styled.div`
   flex: 1 0 0px;
@@ -28,24 +28,6 @@ const PageContent = styled.div`
 
   @media only screen and (max-width: 767px) {
     padding: 1rem 2rem;
-  }
-`;
-
-const SearchSection = styled.div`
-  z-index: 1;
-  position: sticky;
-  top: 1rem;
-  background-color: #f7f7f7b2;
-  border-radius: 8px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: 0.75rem;
-  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
-  margin: 1rem -0.5rem;
-
-  @media (prefers-color-scheme: dark) {
-    background-color: #232323b2;
-    border-bottom-color: #5c5c5c;
   }
 `;
 
@@ -149,8 +131,41 @@ const StatusMessage = styled.p`
   text-align: center;
 `;
 
-const PromptSection = styled.div`
+const Blur = styled.div`
   z-index: 1;
+  position: sticky;
+  ${({ $position }) => $position || "top"}: 0;
+  background-color: #ffffffb2;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  height: 1rem;
+  ${({ $position }) => `margin-${$position || "top"}`}: -1rem;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #161616b2;
+  }
+`;
+
+const SearchSection = styled.div`
+  z-index: 2;
+  position: sticky;
+  top: 1rem;
+  background-color: #f7f7f7b2;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 8px;
+  padding: 0.75rem;
+  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
+  margin: 1rem -0.5rem;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #232323b2;
+    border-bottom-color: #5c5c5c;
+  }
+`;
+
+const PromptSection = styled.div`
+  z-index: 2;
   position: sticky;
   bottom: 1rem;
   background-color: #f7f7f7b2;
@@ -211,7 +226,7 @@ const PromptSelectSection = styled.div`
   justify-content: center;
 `;
 
-const PromptSelect = styled.select`
+const PromptSelect = styled(Select)`
   margin: 0 0.25rem 1rem 0.25rem;
   text-transform: capitalize;
 `;
@@ -319,6 +334,8 @@ function Environment() {
 
   return (
     <EnvironmentPage>
+      <Blur $position="top" />
+
       <PageContent>
         <SearchSection>
           <Input
@@ -364,6 +381,8 @@ function Environment() {
           </PromptSection>
         ) : null}
       </PageContent>
+
+      {!error && prompts.length ? <Blur $position="bottom" /> : null}
     </EnvironmentPage>
   );
 }

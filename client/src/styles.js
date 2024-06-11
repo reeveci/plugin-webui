@@ -95,7 +95,7 @@ const elementStyle = css`
   border: none;
   border-radius: 8px;
   padding: 0.5rem 0.75rem;
-  -webkit-appearance: none;
+  appearance: none;
   box-shadow:
     0 0px 1px hsla(0, 0%, 0%, 0.2),
     0 1px 2px hsla(0, 0%, 0%, 0.2);
@@ -139,6 +139,12 @@ export const Button = styled.button.attrs({ tabIndex: 0 })`
     box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
     transform: translateY(1px);
   }
+`;
+
+export const Select = styled.select`
+  ${elementStyle}
+  font-size: 0.8em;
+  padding: 0.25rem 0.5rem;
 `;
 
 export const Status = styled.span`

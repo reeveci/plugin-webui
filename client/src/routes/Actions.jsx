@@ -25,24 +25,6 @@ const PageContent = styled.div`
   }
 `;
 
-const SearchSection = styled.div`
-  z-index: 1;
-  position: sticky;
-  top: 1rem;
-  background-color: #f7f7f7b2;
-  border-radius: 8px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: 0.75rem;
-  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
-  margin: 1rem -0.5rem;
-
-  @media (prefers-color-scheme: dark) {
-    background-color: #232323b2;
-    border-bottom-color: #5c5c5c;
-  }
-`;
-
 const ActionSection = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -160,6 +142,39 @@ const StatusMessage = styled.p`
   text-align: center;
 `;
 
+const Blur = styled.div`
+  z-index: 1;
+  position: sticky;
+  ${({ $position }) => $position || "top"}: 0;
+  background-color: #ffffffb2;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  height: 1rem;
+  ${({ $position }) => `margin-${$position || "top"}`}: -1rem;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #161616b2;
+  }
+`;
+
+const SearchSection = styled.div`
+  z-index: 2;
+  position: sticky;
+  top: 1rem;
+  background-color: #f7f7f7b2;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 8px;
+  padding: 0.75rem;
+  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
+  margin: 1rem -0.5rem;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #232323b2;
+    border-bottom-color: #5c5c5c;
+  }
+`;
+
 function search(data, terms) {
   let s;
 
@@ -249,6 +264,8 @@ function Actions() {
 
   return (
     <ActionsPage>
+      <Blur $position="top" />
+
       <PageContent>
         <SearchSection>
           <Input
