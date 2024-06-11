@@ -1292,6 +1292,7 @@ Possible causes: the network is offline, Origin is not allowed by Access-Control
 `,H8=ne(pr)`
   font-size: 0.9em;
   padding: 0.5em 0.75em;
+  color: inherit;
 `,z8=ne.div`
   z-index: 1;
   ${({$position:e})=>e||"top"}: 0;
@@ -1421,6 +1422,7 @@ Possible causes: the network is offline, Origin is not allowed by Access-Control
 `,T0=ne(pr)`
   font-size: 0.9em;
   padding: 0.5em 0.75em;
+  color: inherit;
 `,D_=ne.div`
   z-index: 1;
   ${({$position:e})=>e||"top"}: 0;

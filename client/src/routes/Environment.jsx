@@ -130,6 +130,7 @@ const StatusMessage = styled.p`
 const StyledButton = styled(Button)`
   font-size: 0.9em;
   padding: 0.5em 0.75em;
+  color: inherit;
 `;
 
 const Blur = styled.div`
