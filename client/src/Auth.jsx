@@ -1,15 +1,19 @@
-import React from "react";
+import { createContext, useMemo } from "react";
 import Login from "./Login";
 import { TOKEN_COOKIE } from "./environment";
-import { getCookie, validateJWT } from "./token";
+import { getCookie, parseJWT, validateJWT } from "./token";
 
-export const AuthContext = React.createContext({});
+export const AuthContext = createContext({});
 
 function Auth({ children }) {
   const accessToken = getCookie(TOKEN_COOKIE);
-  const accessTokenValid = validateJWT(accessToken);
+  const accessTokenPayload = parseJWT(accessToken);
+  const accessTokenValid = validateJWT(accessTokenPayload);
 
-  const context = React.useMemo(() => ({ accessToken }), [accessToken]);
+  const context = useMemo(
+    () => ({ accessToken, accessTokenPayload }),
+    [accessToken, accessTokenPayload],
+  );
 
   if (!accessToken || !accessTokenValid) {
     return <Login />;

@@ -1,7 +1,7 @@
 import { useResource } from "@civet/core";
 import { faAngleLeft, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useAutoUpdate } from "../Civet";
@@ -20,7 +20,6 @@ const PipelinePage = styled.div`
 `;
 
 const PageContent = styled.div`
-  max-width: 50rem;
   margin: 2rem auto;
   padding: 2rem 4rem;
 
@@ -73,26 +72,26 @@ function Pipeline() {
 
   useAutoUpdate(notify, 2000);
 
-  const goBack = React.useCallback(() => {
+  const goBack = useCallback(() => {
     navigate(`/workergroups/${encodeURIComponent(workerGroup)}`);
   }, [navigate, workerGroup]);
 
-  const [scrollBottom, setScrollBottom] = React.useState(false);
+  const [scrollBottom, setScrollBottom] = useState(false);
 
-  const handleScroll = React.useCallback((event) => {
+  const handleScroll = useCallback((event) => {
     setScrollBottom(
       event.target.scrollTop >=
         event.target.scrollHeight - event.target.offsetHeight,
     );
   }, []);
 
-  const scrollRef = React.useRef();
-  const [scrollID, requestScroll] = React.useReducer(
+  const scrollRef = useRef();
+  const [scrollID, requestScroll] = useReducer(
     (lastID) => (lastID + 1) % 10,
     0,
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     const onResize = () => {
       if (!scrollBottom) return;
       requestScroll();
@@ -101,13 +100,13 @@ function Pipeline() {
     return () => window.removeEventListener("resize", onResize);
   }, [scrollBottom]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (scrollBottom) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [scrollBottom, scrollID]);
 
-  const handleScrollDown = React.useCallback(() => {
+  const handleScrollDown = useCallback(() => {
     if (scrollRef.current == null) return;
     requestScroll();
     setScrollBottom(true);

@@ -35,8 +35,8 @@ export function parseJWT(token) {
   return JSON.parse(jsonPayload);
 }
 
-export function validateJWT(token) {
-  const { exp } = parseJWT(token) || {};
+export function validateJWT(tokenPayload) {
+  const { exp } = tokenPayload || {};
   if (exp > 0) return exp > Date.now() / 1000;
   return false;
 }

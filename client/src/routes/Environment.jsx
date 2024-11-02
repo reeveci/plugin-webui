@@ -9,10 +9,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import debounce from "lodash.debounce";
-import React from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { useAutoUpdate } from "../Civet";
-import { Button, Input, Select } from "../styles";
+import { Button, Input, Select, TextArea } from "../styles";
 
 const EnvironmentPage = styled.div`
   flex: 1 0 0px;
@@ -23,7 +24,6 @@ const EnvironmentPage = styled.div`
 `;
 
 const PageContent = styled.div`
-  max-width: 50rem;
   margin: 1rem auto;
   padding: 2rem 4rem;
 
@@ -253,6 +253,11 @@ const PromptInput = styled(Input)`
   width: 100%;
 `;
 
+const PromptTextArea = styled(TextArea)`
+  width: 100%;
+  resize: none;
+`;
+
 function search(data, terms) {
   const env = Object.entries(data?.env ?? {}).filter(([name]) =>
     terms.every((term) => name.replace(/-/g, " ").toLowerCase().includes(term)),
@@ -282,20 +287,38 @@ function getEnvironment(data, query) {
 }
 
 function Environment() {
-  const [search, setSearch] = React.useState("");
-  const handleSearchChange = React.useCallback((event) => {
-    setSearch(event.target.value || "");
-  }, []);
-  const handleSearchClear = React.useCallback(() => {
-    setSearch("");
-  }, []);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const search = searchParams.get("q") ?? "";
+  const setSearch = useCallback(
+    (value) => {
+      setSearchParams(
+        (searchParams) => {
+          if (value) searchParams.set("q", value);
+          else searchParams.delete("q");
+          return searchParams;
+        },
+        { replace: true },
+      );
+    },
+    [setSearchParams],
+  );
 
-  const [debouncedSearch, setDebouncedSearch] = React.useState("");
-  const updateDebouncedSearch = React.useMemo(
+  const handleSearchChange = useCallback(
+    (event) => {
+      setSearch(event.target.value || "");
+    },
+    [setSearch],
+  );
+  const handleSearchClear = useCallback(() => {
+    setSearch("");
+  }, [setSearch]);
+
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const updateDebouncedSearch = useMemo(
     () => debounce(setDebouncedSearch, 100),
     [],
   );
-  React.useEffect(() => {
+  useEffect(() => {
     updateDebouncedSearch(search);
   }, [updateDebouncedSearch, search]);
 
@@ -314,7 +337,7 @@ function Environment() {
 
   useAutoUpdate(notify, 2000);
 
-  const prompts = React.useMemo(() => {
+  const prompts = useMemo(() => {
     const map = {};
     env?.prompts?.forEach(({ id, name, secret, plugin }) => {
       if (!id || !name) return;
@@ -331,7 +354,7 @@ function Environment() {
     });
   }, [env]);
 
-  const unsetPrompts = React.useMemo(() => {
+  const unsetPrompts = useMemo(() => {
     const map = {};
     env?.prompts?.forEach(({ id, name, secret, plugin }) => {
       if (!id || !name) return;
@@ -341,7 +364,7 @@ function Environment() {
     return map;
   }, [env]);
 
-  const known = React.useMemo(() => {
+  const known = useMemo(() => {
     const map = {};
     Object.entries(unfiltered?.env ?? {})?.forEach(([name, entries]) => {
       entries.forEach(({ plugin }) => {
@@ -415,8 +438,8 @@ function Environment() {
 export default Environment;
 
 function EnvItem({ name, entry, more, unsetPrompts }) {
-  const [collapsed, setCollapsed] = React.useState(true);
-  const toggle = React.useCallback(() => {
+  const [collapsed, setCollapsed] = useState(true);
+  const toggle = useCallback(() => {
     setCollapsed((collapsed) => !collapsed);
   }, []);
 
@@ -464,7 +487,7 @@ function EnvItemRow({
 }) {
   const { dataProvider } = useConfigContext();
 
-  const handleUnset = React.useCallback(async () => {
+  const handleUnset = useCallback(async () => {
     if (!unsetPromptID) return;
 
     if (!confirm(`Are you sure you want to delete ${name}?`)) {
@@ -529,32 +552,32 @@ function EnvItemRow({
 function Prompt({ prompts, known }) {
   const { dataProvider } = useConfigContext();
 
-  const [type, setType] = React.useState(prompts[0].key);
-  const [name, setName] = React.useState("");
-  const [value, setValue] = React.useState("");
-  const [secret, setSecret] = React.useState(false);
+  const [type, setType] = useState(prompts[0].key);
+  const [name, setName] = useState("");
+  const [value, setValue] = useState("");
+  const [secret, setSecret] = useState(false);
 
   if (!prompts.some((entry) => entry.key === type)) {
     setType(prompts[0].key);
   }
 
-  const handleTypeChange = React.useCallback((event) => {
+  const handleTypeChange = useCallback((event) => {
     setType(event.target.value);
   }, []);
 
-  const handleNameChange = React.useCallback((event) => {
+  const handleNameChange = useCallback((event) => {
     setName(event.target.value || "");
   }, []);
 
-  const handleValueChange = React.useCallback((event) => {
+  const handleValueChange = useCallback((event) => {
     setValue(event.target.value || "");
   }, []);
 
-  const handleSecretChange = React.useCallback((event) => {
+  const handleSecretChange = useCallback((event) => {
     setSecret(!!event.target.checked);
   }, []);
 
-  const prompt = React.useMemo(
+  const prompt = useMemo(
     () => prompts.find((entry) => entry.key === type),
     [type, prompts],
   );
@@ -563,12 +586,12 @@ function Prompt({ prompts, known }) {
   if (!secret && !prompt.variable) setSecret(true);
 
   const promptID = prompt?.[secret ? "secret" : "variable"];
-  const alreadySet = React.useMemo(() => {
+  const alreadySet = useMemo(() => {
     if (!name || !prompt?.plugin) return false;
     return known[prompt?.plugin]?.includes(name);
   }, [name, known, prompt]);
 
-  const handleSet = React.useCallback(async () => {
+  const handleSet = useCallback(async () => {
     if (!promptID) return;
 
     if (
@@ -639,13 +662,14 @@ function Prompt({ prompts, known }) {
             </PromptSecret>
 
             <PromptCell width="40%">
-              <PromptInput
+              <PromptTextArea
                 placeholder="Value"
                 aria-label="Value"
                 type="text"
                 name="value"
                 value={value}
                 onChange={handleValueChange}
+                rows={value?.split("\n").length || 1}
               />
             </PromptCell>
 

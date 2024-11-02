@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 const TOKEN_EXPIRY = 12 * time.Hour
@@ -35,7 +35,7 @@ func HandleAuth(p *WebUIPlugin) http.HandlerFunc {
 			return
 		}
 
-		accessToken, expires, err := GenerateToken(p)
+		accessToken, expires, err := GenerateToken(p, "api")
 		if err != nil {
 			http.Error(res, fmt.Sprintf("error generating access token - %s", err), http.StatusInternalServerError)
 			return
@@ -62,7 +62,7 @@ func BasicAuthProvider(p *WebUIPlugin, handler http.Handler) http.HandlerFunc {
 				return
 			}
 
-			token, expires, err := GenerateToken(p)
+			token, expires, err := GenerateToken(p, "basic")
 			if err != nil {
 				http.Error(res, fmt.Sprintf("error creating access token - %s", err), http.StatusInternalServerError)
 				return
@@ -103,9 +103,12 @@ var TOKEN_CHARSET = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 
 const TOKEN_LENGTH = 64
 
-func GenerateTokenSecret() string {
-	rand.Seed(time.Now().UnixNano())
+type JWTClaims struct {
+	Origin string `json:"origin"`
+	jwt.RegisteredClaims
+}
 
+func GenerateTokenSecret() string {
 	result := make([]rune, TOKEN_LENGTH)
 	for i := range result {
 		result[i] = TOKEN_CHARSET[rand.Intn(len(TOKEN_CHARSET))]
@@ -114,11 +117,14 @@ func GenerateTokenSecret() string {
 	return string(result)
 }
 
-func GenerateToken(p *WebUIPlugin) (token string, expires time.Time, err error) {
+func GenerateToken(p *WebUIPlugin, origin string) (token string, expires time.Time, err error) {
 	expires = time.Now().Add(TOKEN_EXPIRY)
 
-	jwt := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
-		ExpiresAt: jwt.NewNumericDate(expires),
+	jwt := jwt.NewWithClaims(jwt.SigningMethodHS256, JWTClaims{
+		origin,
+		jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(expires),
+		},
 	})
 
 	token, err = jwt.SignedString([]byte(p.JWTSecret))
@@ -138,6 +144,5 @@ func ValidateToken(p *WebUIPlugin, token string) (bool, error) {
 		return false, err
 	}
 
-	claims, ok := parsed.Claims.(jwt.MapClaims)
-	return ok && parsed.Valid && claims.VerifyExpiresAt(time.Now().Unix(), true), nil
+	return parsed.Valid, nil
 }

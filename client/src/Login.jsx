@@ -3,7 +3,7 @@ import {
   faRightToBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import { useCallback, useState } from "react";
 import styled from "styled-components";
 import superagent from "superagent";
 import { API_URL, APP_NAME, TOKEN_COOKIE } from "./environment";
@@ -90,19 +90,19 @@ const Buttons = styled.p`
 `;
 
 function Login() {
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [error, setError] = React.useState(undefined);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(undefined);
 
-  const handleUsernameChange = React.useCallback((event) => {
+  const handleUsernameChange = useCallback((event) => {
     setUsername(event.target.value || "");
   }, []);
 
-  const handlePasswordChange = React.useCallback((event) => {
+  const handlePasswordChange = useCallback((event) => {
     setPassword(event.target.value || "");
   }, []);
 
-  const handleSignIn = React.useCallback(
+  const handleSignIn = useCallback(
     (event) => {
       event.preventDefault();
 

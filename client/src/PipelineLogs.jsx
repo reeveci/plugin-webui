@@ -6,7 +6,7 @@ import {
   faTerminal,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { DEFAULT_STAGE } from "./environment";
 import { Button, Status } from "./styles";
@@ -154,11 +154,11 @@ function PipelineLogs({ pipeline, href, requestScroll }) {
     options: { stream: true },
   });
 
-  const reload = React.useCallback(() => {
+  const reload = useCallback(() => {
     notify();
   }, [notify]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!logs || !error || isLoading) {
       return undefined;
     }
@@ -168,13 +168,13 @@ function PipelineLogs({ pipeline, href, requestScroll }) {
     return () => clearTimeout(t);
   }, [logs, error, isLoading, notify]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (requestScroll) {
       requestScroll();
     }
   }, [requestScroll, logs]);
 
-  const { setup, steps } = React.useMemo(() => {
+  const { setup, steps } = useMemo(() => {
     const setup = { log: "" };
     const steps = (pipeline?.pipeline?.steps || []).map((step) => ({
       name: step.name,
@@ -256,8 +256,8 @@ function PipelineLogs({ pipeline, href, requestScroll }) {
     return { setup, steps };
   }, [pipeline, logs]);
 
-  const [setupVisible, setSetupVisible] = React.useState(false);
-  const handleToggleSetupVisible = React.useCallback(() => {
+  const [setupVisible, setSetupVisible] = useState(false);
+  const handleToggleSetupVisible = useCallback(() => {
     setSetupVisible((prev) => !prev);
   }, []);
 
@@ -301,16 +301,16 @@ function PipelineLogs({ pipeline, href, requestScroll }) {
 export default PipelineLogs;
 
 function Step({ name, stage, status, log, index, count }) {
-  const [auto, setAuto] = React.useState(true);
-  const [visible, setVisible] = React.useState(() =>
+  const [auto, setAuto] = useState(true);
+  const [visible, setVisible] = useState(() =>
     ["running", "failed"].includes(status),
   );
-  const handleToggleVisible = React.useCallback(() => {
+  const handleToggleVisible = useCallback(() => {
     setAuto(false);
     setVisible((prev) => !prev);
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (auto) setVisible(["running", "failed"].includes(status));
   }, [auto, status]);
 

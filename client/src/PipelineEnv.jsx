@@ -4,7 +4,7 @@ import {
   faLock,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import { useCallback, useState } from "react";
 import styled from "styled-components";
 
 const Table = styled.table`
@@ -65,8 +65,8 @@ const EnvValue = styled.td`
 function PipelineEnv({ pipeline }) {
   const env = pipeline?.pipeline?.env;
 
-  const [visible, setVisible] = React.useState(false);
-  const handleToggleVisible = React.useCallback(() => {
+  const [visible, setVisible] = useState(false);
+  const handleToggleVisible = useCallback(() => {
     setVisible((prev) => !prev);
   }, []);
 

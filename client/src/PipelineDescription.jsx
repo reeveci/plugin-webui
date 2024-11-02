@@ -1,8 +1,11 @@
 import { faAngleDown, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MarkdownPreview from "@uiw/react-markdown-preview";
-import React from "react";
+import { useCallback, useState } from "react";
+import rehypeSanitize from "rehype-sanitize";
 import styled from "styled-components";
+
+const rehypePlugins = [rehypeSanitize];
 
 const Table = styled.table`
   color: inherit;
@@ -51,12 +54,13 @@ const Content = styled.td`
     min-width: calc(100% - 3rem);
     display: inline-block;
     margin: 0.5rem 1.5rem;
+    width: calc(100% - 3rem);
   }
 `;
 
 function PipelineDescription({ pipeline }) {
-  const [visible, setVisible] = React.useState(true);
-  const handleToggleVisible = React.useCallback(() => {
+  const [visible, setVisible] = useState(true);
+  const handleToggleVisible = useCallback(() => {
     setVisible((prev) => !prev);
   }, []);
 
@@ -78,7 +82,10 @@ function PipelineDescription({ pipeline }) {
         {visible ? (
           <ContentRow>
             <Content>
-              <MarkdownPreview source={pipeline.pipeline.description} />
+              <MarkdownPreview
+                source={pipeline.pipeline.description}
+                rehypePlugins={rehypePlugins}
+              />
             </Content>
           </ContentRow>
         ) : null}

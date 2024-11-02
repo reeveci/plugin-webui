@@ -6,7 +6,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import debounce from "lodash.debounce";
-import React from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 import { useAutoUpdate } from "../Civet";
 import { Button, Input } from "../styles";
@@ -20,7 +21,6 @@ const ActionsPage = styled.div`
 `;
 
 const PageContent = styled.div`
-  max-width: 50rem;
   margin: 1rem auto;
   padding: 2rem 4rem;
 
@@ -214,10 +214,9 @@ function search(data, terms) {
     if (!terms.length) return [];
     return actions.filter((action) =>
       terms.every((term) =>
-        (action.name || action.id)
-          ?.replace(/-/g, " ")
-          .toLowerCase()
-          .includes(term),
+        [action.name, action.id].some((item) =>
+          item?.replace(/-/g, " ").toLowerCase().includes(term),
+        ),
       ),
     );
   };
@@ -255,20 +254,38 @@ function getActions(data, query) {
 }
 
 function Actions() {
-  const [search, setSearch] = React.useState("");
-  const handleSearchChange = React.useCallback((event) => {
-    setSearch(event.target.value || "");
-  }, []);
-  const handleSearchClear = React.useCallback(() => {
-    setSearch("");
-  }, []);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const search = searchParams.get("q") ?? "";
+  const setSearch = useCallback(
+    (value) => {
+      setSearchParams(
+        (searchParams) => {
+          if (value) searchParams.set("q", value);
+          else searchParams.delete("q");
+          return searchParams;
+        },
+        { replace: true },
+      );
+    },
+    [setSearchParams],
+  );
 
-  const [debouncedSearch, setDebouncedSearch] = React.useState("");
-  const updateDebouncedSearch = React.useMemo(
+  const handleSearchChange = useCallback(
+    (event) => {
+      setSearch(event.target.value || "");
+    },
+    [setSearch],
+  );
+  const handleSearchClear = useCallback(() => {
+    setSearch("");
+  }, [setSearch]);
+
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const updateDebouncedSearch = useMemo(
     () => debounce(setDebouncedSearch, 100),
     [],
   );
-  React.useEffect(() => {
+  useEffect(() => {
     updateDebouncedSearch(search);
   }, [updateDebouncedSearch, search]);
 
@@ -360,8 +377,8 @@ function ActionGroup({ groups, actions }) {
 }
 
 function SubGroup({ name, groups, actions }) {
-  const [visible, setVisible] = React.useState(true);
-  const handleToggleVisible = React.useCallback(() => {
+  const [visible, setVisible] = useState(true);
+  const handleToggleVisible = useCallback(() => {
     setVisible((prev) => !prev);
   }, []);
 
@@ -393,9 +410,9 @@ function SubGroup({ name, groups, actions }) {
 function Action({ id, name, plugin }) {
   const { dataProvider } = useConfigContext();
 
-  const [status, setStatus] = React.useState(undefined);
+  const [status, setStatus] = useState(undefined);
 
-  const handleClick = React.useCallback(async () => {
+  const handleClick = useCallback(async () => {
     setStatus(undefined);
     try {
       await dataProvider.create(`actions/${encodeURIComponent(id)}`, {});

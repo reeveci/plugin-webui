@@ -5,9 +5,10 @@ import {
   faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import styled from "styled-components";
+import { AuthContext } from "./Auth";
 import { useAutoUpdate } from "./Civet";
 import { APP_NAME, TOKEN_COOKIE } from "./environment";
 import { Button, Title } from "./styles";
@@ -80,6 +81,7 @@ const TitleLink = styled(Link)`
 const SignOutButton = styled(Button)`
   margin: 0 0 0 auto;
   color: inherit;
+  visibility: ${({ onClick }) => (onClick ? undefined : "hidden")};
 `;
 
 const NavList = styled.ul`
@@ -181,6 +183,8 @@ function getWorkerGroups(data) {
 }
 
 function App() {
+  const { accessTokenPayload } = useContext(AuthContext);
+
   const {
     data: workerGroups,
     isLoading,
@@ -196,18 +200,25 @@ function App() {
 
   useAutoUpdate(notify, 2000);
 
-  const handleSignOut = React.useCallback(() => {
-    clearCookie(TOKEN_COOKIE);
-    document.location.reload();
-  }, []);
+  const canSignOut = accessTokenPayload?.origin !== "basic";
+  const handleSignOut = useMemo(
+    () =>
+      canSignOut
+        ? () => {
+            clearCookie(TOKEN_COOKIE);
+            document.location.reload();
+          }
+        : undefined,
+    [canSignOut],
+  );
 
-  const [menuVisible, setMenuVisible] = React.useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
 
-  const handleToggleMenu = React.useCallback(() => {
+  const handleToggleMenu = useCallback(() => {
     setMenuVisible((prev) => !prev);
   }, []);
 
-  const closeMenu = React.useCallback(() => {
+  const closeMenu = useCallback(() => {
     setMenuVisible(false);
   }, []);
 

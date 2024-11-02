@@ -20,3 +20,53 @@ Settings may also be shared between plugins by prefixing them with `REEVE_SHARED
 - `ADMIN_USERNAME` - Administrator username
 - `ADMIN_PASSWORD` - Administrator password
 - `CORS_ORIGIN` - Optional value for the Access-Control-Allow-Origin header for API requests
+
+### 3rd Party Authentication
+
+If you want authentication to be handled by a 3rd party, you can do so by configuring your Reverse Proxy to provide basic auth to the application.
+By doing so, the server will set the corresponding session cookie when delivering the page.
+Please note that the Authorization header sent by the web client must always be forwarded to the `/api/*` endpoints.
+
+Here is a basic example using [Traefik](https://traefik.io/traefik) with [Authelia](https://authelia.com):
+
+```yaml
+http:
+  routers:
+    reeve-api:
+      entryPoints:
+        - websecure
+      middlewares:
+        - authelia@file
+      rule: (Host(`ci.example.com`) && PathPrefix(`/api/`))
+      service: reeve@file
+
+    reeve:
+      entryPoints:
+        - websecure
+      middlewares:
+        - authelia@file
+        - reeve-webui-auth@file
+      rule: Host(`ci.example.com`)
+      service: reeve@file
+
+  services:
+    reeve:
+      loadBalancer:
+        servers:
+          - url: http://localhost:9081
+
+http:
+  middlewares:
+    authelia:
+      forwardAuth:
+        address: http://authelia:9091/api/authz/forward-auth
+        authResponseHeaders:
+          - Remote-User
+          - Remote-Groups
+          - Remote-Name
+          - Remote-Email
+    reeve-webui-auth:
+      headers:
+        customRequestHeaders:
+          Authorization: Basic dXNlcjpwYXNzd29yZA== # example basic auth header (user:password) - DO NOT USE!!
+```

@@ -13,7 +13,6 @@ const WorkerGroupPage = styled.div`
 `;
 
 const PageContent = styled.div`
-  max-width: 50rem;
   margin: 0px auto;
   padding: 2rem 4rem;
 

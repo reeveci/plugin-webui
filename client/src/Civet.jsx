@@ -1,5 +1,5 @@
 import { ConfigProvider, DataProvider } from "@civet/core";
-import React from "react";
+import { useEffect, useState } from "react";
 import superagent from "superagent";
 import { TextDecoder as DecoderPolyfill } from "text-encoding-utf-8";
 import Url from "url-parse";
@@ -124,7 +124,7 @@ class UIDataProvider extends DataProvider {
 }
 
 function Civet({ children }) {
-  const [dataProvider] = React.useState(() => new UIDataProvider());
+  const [dataProvider] = useState(() => new UIDataProvider());
 
   return (
     <ConfigProvider dataProvider={dataProvider}>{children}</ConfigProvider>
@@ -134,9 +134,9 @@ function Civet({ children }) {
 export default Civet;
 
 export function useAutoUpdate(notify, interval) {
-  const [visible, setVisible] = React.useState(!document.hidden);
+  const [visible, setVisible] = useState(!document.hidden);
 
-  React.useEffect(() => {
+  useEffect(() => {
     function onVisibilityChange() {
       setVisible(!document.hidden);
     }
@@ -147,7 +147,7 @@ export function useAutoUpdate(notify, interval) {
       document.removeEventListener("visibilitychange", onVisibilityChange);
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!visible) return;
 
     notify();
