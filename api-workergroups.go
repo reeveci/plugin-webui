@@ -6,18 +6,10 @@ import (
 	"net/http"
 )
 
-func HandlePipelines(p *WebUIPlugin) http.HandlerFunc {
+func HandleWorkerGroups(p *WebUIPlugin) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
-		groups := req.URL.Query()["workerGroup"]
-
-		pipelines := p.History.Summary(groups)
-
-		result := PipelinesResponse{
-			Pipelines: make([]PipelineSummaryResponse, len(pipelines)),
-		}
-
-		for i, entry := range pipelines {
-			result.Pipelines[i].ApplyHistoryEntry(&entry)
+		result := WorkerGroupsResponse{
+			WorkerGroups: p.History.Groups(),
 		}
 
 		res.Header().Set("Content-Type", "application/json")

@@ -20,6 +20,7 @@ Settings may also be shared between plugins by prefixing them with `REEVE_SHARED
 - `ADMIN_USERNAME` - Administrator username
 - `ADMIN_PASSWORD` - Administrator password
 - `CORS_ORIGIN` - Optional value for the Access-Control-Allow-Origin header for API requests
+- `HISTORY_LIMIT` - Maximum number of pipelines to be preserved in memory (default `50`)
 
 ### 3rd Party Authentication
 

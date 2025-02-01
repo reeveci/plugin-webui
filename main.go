@@ -16,7 +16,6 @@ func main() {
 			Log: log,
 
 			JWTSecret: GenerateTokenSecret(),
-			History:   NewPipelineHistory(10),
 			Actions:   NewActionStore(),
 			Env:       NewEnvStore(),
 		},
@@ -30,12 +29,13 @@ type WebUIPlugin struct {
 	TLSCert, TLSKey              string
 	AdminUsername, AdminPassword string
 	CORSOrigin                   string
+	HistoryLimit                 int
 
-	Log hclog.Logger
-	API plugin.ReeveAPI
+	Log     hclog.Logger
+	API     plugin.ReeveAPI
+	History *PipelineHistory
 
 	JWTSecret string
-	History   *PipelineHistory
 	Actions   *ActionStore
 	Env       *EnvStore
 }
@@ -62,10 +62,15 @@ func (p *WebUIPlugin) Register(settings map[string]string, api plugin.ReeveAPI) 
 		return
 	}
 	p.CORSOrigin = settings["CORS_ORIGIN"]
+	if p.HistoryLimit, err = intSetting(settings, "HISTORY_LIMIT", 50); err != nil {
+		return
+	}
 
 	if p.HTTPPort == "" && (p.HTTPSPort == "" || p.TLSCert == "" || p.TLSKey == "") {
 		p.HTTPPort = "9180"
 	}
+
+	p.History = NewPipelineHistory(max(1, p.HistoryLimit))
 
 	go Serve(p)
 

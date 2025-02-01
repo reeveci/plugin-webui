@@ -2,6 +2,7 @@ package main
 
 import (
 	"io"
+	"sort"
 	"sync"
 	"time"
 
@@ -12,13 +13,13 @@ import (
 
 func NewPipelineHistory(size int) *PipelineHistory {
 	return &PipelineHistory{
-		Entries: make(map[string][]*HistoryEntry),
+		Entries: make([]*HistoryEntry, 0, size+1),
 		size:    size,
 	}
 }
 
 type PipelineHistory struct {
-	Entries map[string][]*HistoryEntry
+	Entries []*HistoryEntry
 	size    int
 
 	sync.Mutex
@@ -35,10 +36,8 @@ func (p *PipelineHistory) Put(status schema.PipelineStatus) *HistoryEntry {
 	p.Lock()
 	defer p.Unlock()
 
-	group := p.Entries[status.WorkerGroup]
-
 	var entry *HistoryEntry
-	for _, value := range group {
+	for _, value := range p.Entries {
 		if value.ActivityID == status.ActivityID {
 			entry = value
 			entry.PipelineStatus = status
@@ -54,7 +53,7 @@ func (p *PipelineHistory) Put(status schema.PipelineStatus) *HistoryEntry {
 			Logs:           nil,
 		}
 
-		p.Entries[status.WorkerGroup] = append(group, entry)
+		p.Entries = append(p.Entries, entry)
 	}
 
 	entry.PipelineStatus.Logs = nil
@@ -81,19 +80,17 @@ func (p *PipelineHistory) Put(status schema.PipelineStatus) *HistoryEntry {
 	if status.Finished() {
 		now := time.Now()
 		entry.EndTime = &now
-		p.cleanup(status.WorkerGroup)
+		p.cleanup()
 	}
 
 	return entry
 }
 
-func (p *PipelineHistory) Get(workerGroup, activityID string) (result HistoryEntry, ok bool) {
+func (p *PipelineHistory) Get(activityID string) (result HistoryEntry, ok bool) {
 	p.Lock()
 	defer p.Unlock()
 
-	group := p.Entries[workerGroup]
-
-	for _, value := range group {
+	for _, value := range p.Entries {
 		if value.ActivityID == activityID {
 			return *value, true
 		}
@@ -106,50 +103,51 @@ func (p *PipelineHistory) Groups() []string {
 	p.Lock()
 	defer p.Unlock()
 
-	result := make([]string, 0, len(p.Entries))
+	names := make(map[string]bool)
+	for _, entry := range p.Entries {
+		names[entry.WorkerGroup] = true
+	}
 
-	for key := range p.Entries {
+	result := make([]string, 0, len(names))
+	for key := range names {
 		result = append(result, key)
 	}
+	sort.Strings(result)
 
 	return result
 }
 
-func (p *PipelineHistory) Summary(workerGroup string) WorkerGroupResponse {
+func (p *PipelineHistory) Summary(workerGroups []string) []HistoryEntry {
 	p.Lock()
 	defer p.Unlock()
 
-	group := p.Entries[workerGroup]
-	count := len(group)
+	count := len(p.Entries)
 
-	result := WorkerGroupResponse{
-		Pipelines: make([]PipelineSummaryResponse, count),
+	groups := make(map[string]bool, len(workerGroups))
+	for _, key := range workerGroups {
+		groups[key] = true
 	}
+	filterGroups := len(workerGroups) > 0
 
-	for i, entry := range group {
-		result.Pipelines[count-1-i] = PipelineSummaryResponse{
-			ID:        entry.ActivityID,
-			Name:      entry.Pipeline.Name,
-			Headline:  entry.Pipeline.Headline,
-			StartTime: entry.StartTime,
-			EndTime:   entry.EndTime,
-			Status:    entry.Status,
-			Result:    entry.Result,
+	result := make([]HistoryEntry, 0, count)
+
+	for _, entry := range p.Entries {
+		if !filterGroups || groups[entry.WorkerGroup] {
+			result = append(result, *entry)
 		}
 	}
 
 	return result
 }
 
-func (p *PipelineHistory) cleanup(workerGroup string) {
-	group := p.Entries[workerGroup]
-	count := len(group)
+func (p *PipelineHistory) cleanup() {
+	count := len(p.Entries)
 
 	filtered := make([]*HistoryEntry, 0, count)
 	free := p.size
 
-	for i := range group {
-		value := group[count-1-i]
+	for i := range p.Entries {
+		value := p.Entries[count-1-i]
 
 		if !value.Finished() {
 			filtered = append(filtered, value)
@@ -168,5 +166,5 @@ func (p *PipelineHistory) cleanup(workerGroup string) {
 	for i, value := range filtered {
 		result[remaining-1-i] = value
 	}
-	p.Entries[workerGroup] = result
+	p.Entries = result
 }

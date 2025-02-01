@@ -17,25 +17,42 @@ type AuthResponse struct {
 	Expires     time.Time `json:"expires"`
 }
 
-type PipelinesResponse struct {
-	WorkerGroups map[string]WorkerGroupResponse `json:"workerGroups"`
+type WorkerGroupsResponse struct {
+	WorkerGroups []string `json:"workerGroups"`
 }
 
-type WorkerGroupResponse struct {
+type PipelinesResponse struct {
 	Pipelines []PipelineSummaryResponse `json:"pipelines"`
 }
 
 type PipelineSummaryResponse struct {
-	ID        string                `json:"id"`
-	Name      string                `json:"name"`
-	Headline  string                `json:"headline"`
-	StartTime *time.Time            `json:"startTime"`
-	EndTime   *time.Time            `json:"endTime"`
-	Status    schema.Status         `json:"status"`
-	Result    schema.PipelineResult `json:"result"`
+	ID          string                `json:"id"`
+	WorkerGroup string                `json:"workerGroup"`
+	Name        string                `json:"name"`
+	Headline    string                `json:"headline"`
+	StartTime   *time.Time            `json:"startTime"`
+	EndTime     *time.Time            `json:"endTime"`
+	Status      schema.Status         `json:"status"`
+	Result      schema.PipelineResult `json:"result"`
+}
+
+func (r *PipelineSummaryResponse) ApplyHistoryEntry(entry *HistoryEntry) {
+	r.ID = entry.ActivityID
+	r.WorkerGroup = entry.WorkerGroup
+	r.Name = entry.Pipeline.Name
+	r.Headline = entry.Pipeline.Headline
+	r.StartTime = entry.StartTime
+	r.EndTime = entry.EndTime
+	r.Status = entry.Status
+	r.Result = entry.Result
 }
 
 type PipelineDetailResponse struct {
 	PipelineSummaryResponse
 	Pipeline schema.Pipeline `json:"pipeline"`
+}
+
+func (r *PipelineDetailResponse) ApplyHistoryEntry(entry *HistoryEntry) {
+	r.PipelineSummaryResponse.ApplyHistoryEntry(entry)
+	r.Pipeline = entry.Pipeline
 }

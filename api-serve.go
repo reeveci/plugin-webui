@@ -23,10 +23,10 @@ func Serve(p *WebUIPlugin) {
 
 	api := mux.NewRouter()
 	api.HandleFunc("/auth", CorsHandler(p, HandleAuth(p), http.MethodPost))
+	api.HandleFunc("/workerGroups", CorsHandler(p, AuthValidator(p, HandleWorkerGroups(p)), http.MethodGet))
 	api.HandleFunc("/pipelines", CorsHandler(p, AuthValidator(p, HandlePipelines(p)), http.MethodGet))
-	api.HandleFunc("/pipelines/{workerGroup}", CorsHandler(p, AuthValidator(p, HandleWorkerGroup(p)), http.MethodGet))
-	api.HandleFunc("/pipelines/{workerGroup}/{id}", CorsHandler(p, AuthValidator(p, HandlePipeline(p)), http.MethodGet))
-	api.HandleFunc("/pipelines/{workerGroup}/{id}/logs", CorsHandler(p, AuthValidator(p, HandlePipelineLogs(p)), http.MethodGet))
+	api.HandleFunc("/pipelines/{id}", CorsHandler(p, AuthValidator(p, HandlePipeline(p)), http.MethodGet))
+	api.HandleFunc("/pipelines/{id}/logs", CorsHandler(p, AuthValidator(p, HandlePipelineLogs(p)), http.MethodGet))
 	api.HandleFunc("/actions", CorsHandler(p, AuthValidator(p, HandleActions(p)), http.MethodGet))
 	api.HandleFunc("/actions/{id}", CorsHandler(p, AuthValidator(p, HandleTriggerAction(p)), http.MethodPost))
 	api.HandleFunc("/environment", CorsHandler(p, AuthValidator(p, HandleEnvironment(p)), http.MethodGet))

@@ -12,13 +12,9 @@ import (
 
 func HandlePipelineLogs(p *WebUIPlugin) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
-		vars := mux.Vars(req)
+		rc := http.NewResponseController(res)
 
-		workerGroup := vars["workerGroup"]
-		if workerGroup == "" {
-			http.Error(res, "missing worker group path parameter", http.StatusBadRequest)
-			return
-		}
+		vars := mux.Vars(req)
 
 		id := vars["id"]
 		if id == "" {
@@ -26,7 +22,7 @@ func HandlePipelineLogs(p *WebUIPlugin) http.HandlerFunc {
 			return
 		}
 
-		entry, ok := p.History.Get(workerGroup, id)
+		entry, ok := p.History.Get(id)
 		if !ok {
 			http.Error(res, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
@@ -42,38 +38,23 @@ func HandlePipelineLogs(p *WebUIPlugin) http.HandlerFunc {
 		headers.Set("Content-Type", "text/plain")
 		headers.Set("X-Content-Type-Options", "nosniff")
 
-		flusher, hasFlusher := res.(http.Flusher)
-
-		if !hasFlusher {
-			headers.Set("Transfer-Encoding", "chunked")
-		}
-
-		res.WriteHeader(http.StatusOK)
-
-		if hasFlusher {
-			flusher.Flush()
-		}
+		rc.Flush()
 
 		io.WriteString(res, strings.Repeat("#:INIT:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n", 13))
 
-		if hasFlusher {
-			flusher.Flush()
+		rc.Flush()
 
-			r := bufio.NewReader(reader)
+		r := bufio.NewReader(reader)
+    defer reader.Close()
 
-			for {
-				read, err := r.ReadBytes('\n')
-				if err != nil {
-					break
-				}
-
-				res.Write(read)
-				flusher.Flush()
+		for {
+			read, err := r.ReadBytes('\n')
+			if err != nil {
+				break
 			}
-		} else {
-			io.Copy(res, reader)
-		}
 
-		reader.Close()
+			res.Write(read)
+			rc.Flush()
+		}
 	}
 }

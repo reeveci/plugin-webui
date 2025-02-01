@@ -12,36 +12,20 @@ func HandlePipeline(p *WebUIPlugin) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
 
-		workerGroup := vars["workerGroup"]
-		if workerGroup == "" {
-			http.Error(res, "missing worker group path parameter", http.StatusBadRequest)
-			return
-		}
-
 		id := vars["id"]
 		if id == "" {
 			http.Error(res, "missing id path parameter", http.StatusBadRequest)
 			return
 		}
 
-		entry, ok := p.History.Get(workerGroup, id)
+		entry, ok := p.History.Get(id)
 		if !ok {
 			http.Error(res, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
 
-		result := PipelineDetailResponse{
-			PipelineSummaryResponse: PipelineSummaryResponse{
-				ID:        entry.ActivityID,
-				Name:      entry.Pipeline.Name,
-				Headline:  entry.Pipeline.Headline,
-				StartTime: entry.StartTime,
-				EndTime:   entry.EndTime,
-				Status:    entry.Status,
-				Result:    entry.Result,
-			},
-			Pipeline: entry.Pipeline,
-		}
+		var result PipelineDetailResponse
+    result.ApplyHistoryEntry(&entry)
 
 		res.Header().Set("Content-Type", "application/json")
 		err := json.NewEncoder(res).Encode(result)
