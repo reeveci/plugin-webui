@@ -106,7 +106,7 @@ const elementStyle = css`
 
   &:disabled {
     opacity: 0.8;
-    box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.2);
+    box-shadow: 0px 0px 1px hsla(0, 0%, 0%, 0.2);
   }
 
   &:not(:disabled):hover {
@@ -136,7 +136,7 @@ export const Button = styled.button.attrs({ tabIndex: 0 })`
   -webkit-user-select: none;
 
   &:not(:disabled):active {
-    box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
+    box-shadow: 0px 0px 1px hsla(0, 0%, 0%, 0.4);
     transform: translateY(1px);
   }
 `;
@@ -154,7 +154,7 @@ export const Status = styled.span`
   font-stretch: semi-condensed;
   text-transform: uppercase;
   border-radius: 4px;
-  padding: 0.5rem;
+  padding: ${({ $condensed }) => ($condensed ? '0.125rem' : '0.5rem')} 0.5rem;
   color: white;
 
   ${({ $status }) => {
@@ -187,7 +187,7 @@ export const Status = styled.span`
     }
 
     return `
-      box-shadow: 0 0px 1px ${shadow}, 0 1px 2px ${shadow};
+      box-shadow: 0px 0px 1px ${shadow}, 0px 1px 2px ${shadow};
       background-color: ${color};
     `;
   }};

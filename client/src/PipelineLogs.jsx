@@ -48,7 +48,7 @@ const Card = styled.table`
   font-size: 1rem;
   border: none;
   border-radius: 8px;
-  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
+  box-shadow: 0px 0px 1px hsla(0, 0%, 0%, 0.4);
   line-height: 1.5;
   margin: 2rem auto;
 

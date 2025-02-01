@@ -181,7 +181,7 @@ const SearchSection = styled.div`
   -webkit-backdrop-filter: blur(20px);
   border-radius: 8px;
   padding: 0.75rem;
-  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
+  box-shadow: 0px 0px 1px hsla(0, 0%, 0%, 0.4);
   margin: 1rem -0.5rem;
   display: flex;
   justify-content: center;

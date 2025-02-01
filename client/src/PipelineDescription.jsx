@@ -43,7 +43,7 @@ const Content = styled.td`
   max-width: 0px;
   border-radius: 6px;
   overflow: auto;
-  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);
+  box-shadow: 0px 0px 1px hsla(0, 0%, 0%, 0.4);
 
   @media (prefers-color-scheme: dark) {
     background-color: #0a0a0a;
