@@ -61,7 +61,7 @@ const InfoCell = styled.div`
 `;
 
 const StatusCell = styled(InfoCell)`
-  flex: 0 0 auto;
+  flex: 1 0 auto;
   min-width: 33%;
 `;
 

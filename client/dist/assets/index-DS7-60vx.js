@@ -1587,7 +1587,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     background-color: #232323;
   }
 `,PW=_e(FT)`
-  flex: 0 0 auto;
+  flex: 1 0 auto;
   min-width: 33%;
 `,BW=_e(FT)`
   flex: 0 1 33%;
