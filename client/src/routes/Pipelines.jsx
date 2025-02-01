@@ -124,10 +124,7 @@ function Pipelines() {
 
   const { data: workerGroups, notify: notifyWorkerGroups } = useResource({
     name: 'workerGroups',
-    options: {
-      searchParams: { workerGroup: enabledWorkerGroups },
-      getItems: getWorkerGroups,
-    },
+    options: { getItems: getWorkerGroups },
     persistent: true,
   });
 
@@ -141,7 +138,10 @@ function Pipelines() {
     notify,
   } = useResource({
     name: 'pipelines',
-    options: { getItems: getPipelines },
+    options: {
+      searchParams: { workerGroup: enabledWorkerGroups },
+      getItems: getPipelines,
+    },
   });
 
   useAutoUpdate(notify, 2000);
