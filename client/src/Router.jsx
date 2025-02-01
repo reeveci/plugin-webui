@@ -10,18 +10,15 @@ import Actions from '@/routes/Actions';
 import Environment from '@/routes/Environment';
 import Index from '@/routes/Index';
 import Pipeline from '@/routes/Pipeline';
-import WorkerGroup from '@/routes/WorkerGroup';
+import Pipelines from '@/routes/Pipelines';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<Error />}>
       <Route errorElement={<Error />}>
         <Route index element={<Index />} />
-        <Route path="workergroups/:workerGroup" element={<WorkerGroup />} />
-        <Route
-          path="workergroups/:workerGroup/pipelines/:pipelineID"
-          element={<Pipeline />}
-        />
+        <Route path="pipelines" element={<Pipelines />} />
+        <Route path="pipelines/:id" element={<Pipeline />} />
         <Route path="actions" element={<Actions />} />
         <Route path="environment" element={<Environment />} />
       </Route>

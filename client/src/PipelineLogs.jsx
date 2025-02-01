@@ -40,10 +40,6 @@ const SetupHeader = styled.td`
   }
 `;
 
-const StyledButton = styled(Button)`
-  float: right;
-`;
-
 const Card = styled.table`
   position: relative;
   color: inherit;
@@ -176,12 +172,13 @@ function PipelineLogs({ pipeline, href, requestScroll }) {
 
   const { setup, steps } = useMemo(() => {
     const setup = { log: '' };
-    const steps = (pipeline?.pipeline?.steps || []).map((step) => ({
-      name: step.name,
-      stage: step.stage,
-      log: '',
-      status: 'waiting',
-    }));
+    const steps =
+      pipeline?.pipeline?.steps?.map((step) => ({
+        name: step.name,
+        stage: step.stage,
+        log: '',
+        status: 'waiting',
+      })) ?? [];
 
     /*
       init
@@ -210,7 +207,7 @@ function PipelineLogs({ pipeline, href, requestScroll }) {
       cleanup
     */
 
-    (logs || '').split('\n').forEach((line) => {
+    logs?.split('\n').forEach((line) => {
       if (line.startsWith('[headline]') || line.startsWith('[description]')) {
         return;
       }
@@ -290,9 +287,9 @@ function PipelineLogs({ pipeline, href, requestScroll }) {
       ))}
 
       {isLoading ? null : (
-        <StyledButton onClick={reload}>
+        <Button onClick={reload}>
           <FontAwesomeIcon icon={faRotateRight} /> Reload
-        </StyledButton>
+        </Button>
       )}
     </>
   );

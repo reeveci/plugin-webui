@@ -1,9 +1,4 @@
-import { useResource } from '@civet/core';
-import {
-  faBars,
-  faLayerGroup,
-  faRightFromBracket,
-} from '@fortawesome/free-solid-svg-icons';
+import { faBars, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router';
@@ -12,7 +7,6 @@ import AuthContext from '@/AuthContext';
 import { APP_NAME, TOKEN_COOKIE } from '@/environment';
 import { Button, Title } from '@/styles';
 import { clearCookie } from '@/token';
-import useAutoUpdate from '@/useAutoUpdate';
 
 const MenuButton = styled(Button)`
   margin: 0 0 0 1rem;
@@ -23,6 +17,7 @@ const Nav = styled.nav`
   position: relative;
   flex: 1;
   overflow: auto;
+  padding-top: 0.6rem;
   padding-bottom: 2rem;
   display: flex;
   flex-direction: column;
@@ -100,24 +95,6 @@ const NavList = styled.ul`
   }
 `;
 
-const Header = styled.h2`
-  position: sticky;
-  top: 0;
-  margin: 0 -1rem;
-  padding: 0.83em 2rem;
-  background-color: #f7f7f7b2;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  text-align: start;
-  font-size: 1rem;
-  font-weight: normal;
-  text-transform: uppercase;
-
-  @media (prefers-color-scheme: dark) {
-    background-color: #232323b2;
-  }
-`;
-
 const NavListItem = styled.li`
   margin: 0.4rem 0.5rem;
 
@@ -150,10 +127,6 @@ const NavListItem = styled.li`
   }
 `;
 
-const NavMessage = styled.li`
-  margin: 0.9rem 1rem 0 1rem;
-`;
-
 const Detail = styled.div`
   @media (min-width: 768px) {
     min-width: 0px;
@@ -175,30 +148,8 @@ const Detail = styled.div`
   flex-direction: column;
 `;
 
-function getWorkerGroups(data) {
-  return Object.entries(data?.workerGroups || {}).map(([name, item]) => ({
-    ...item,
-    name,
-  }));
-}
-
 function App() {
   const { accessTokenPayload } = useContext(AuthContext);
-
-  const {
-    data: workerGroups,
-    isLoading,
-    isInitial,
-    error,
-    notify,
-  } = useResource({
-    name: 'pipelines',
-    options: {
-      getItems: getWorkerGroups,
-    },
-  });
-
-  useAutoUpdate(notify, 2000);
 
   const canSignOut = accessTokenPayload?.origin !== 'basic';
   const handleSignOut = useMemo(
@@ -241,36 +192,10 @@ function App() {
 
         <Nav>
           <NavList>
-            <Header>Worker groups</Header>
+            <NavItem href="pipelines" closeMenu={closeMenu}>
+              Pipelines
+            </NavItem>
 
-            {workerGroups.map((workerGroup) => (
-              <NavItem
-                key={workerGroup.name}
-                href={`workergroups/${encodeURIComponent(workerGroup.name)}`}
-                closeMenu={closeMenu}
-              >
-                <span>
-                  <FontAwesomeIcon icon={faLayerGroup} /> {workerGroup.name}
-                </span>
-              </NavItem>
-            ))}
-
-            {workerGroups.length > 0 ? null : (
-              <NavMessage>
-                <i>
-                  {error
-                    ? `Error loading pipelines: ${
-                        error.statusText || error.message
-                      }`
-                    : isLoading && isInitial
-                      ? 'Loading...'
-                      : 'Queue is empty'}
-                </i>
-              </NavMessage>
-            )}
-          </NavList>
-
-          <NavList>
             <NavItem href="actions" closeMenu={closeMenu}>
               Actions
             </NavItem>

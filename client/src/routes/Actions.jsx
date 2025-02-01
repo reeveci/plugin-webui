@@ -157,12 +157,12 @@ const StyledBarButton = styled(StyledButton)`
 
 const Blur = styled.div`
   z-index: 1;
-  ${({ $position }) => $position || 'top'}: 0;
+  ${({ $position }) => $position ?? 'top'}: 0;
   background-color: #ffffffb2;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   height: 1rem;
-  ${({ $position }) => `margin-${$position || 'top'}`}: -1rem;
+  ${({ $position }) => `margin-${$position ?? 'top'}`}: -1rem;
 
   @media (prefers-color-scheme: dark) {
     background-color: #161616b2;
@@ -224,7 +224,7 @@ function search(data, terms) {
   s = (data, terms) => {
     const groups = Object.entries(data?.groups ?? {})
       .map(([name, item]) => [name, searchGroup(name, item, terms)])
-      .filter(([, { groups, actions }]) => groups || actions?.length);
+      .filter(([, { groups, actions }]) => groups ?? actions?.length);
     return {
       ...data,
       groups: groups.length ? Object.fromEntries(groups) : undefined,
@@ -272,7 +272,7 @@ function Actions() {
 
   const handleSearchChange = useCallback(
     (event) => {
-      setSearch(event.target.value || '');
+      setSearch(event.target.value ?? '');
     },
     [setSearch],
   );
@@ -345,7 +345,7 @@ function Actions() {
                 ? `Error loading actions: ${error.statusText || error.message}`
                 : isLoading && isInitial
                   ? 'Loading...'
-                  : 'No actions available'}
+                  : 'No actions found'}
             </i>
           </StatusMessage>
         )}

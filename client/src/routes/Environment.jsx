@@ -138,12 +138,12 @@ const StyledBarButton = styled(StyledButton)`
 
 const Blur = styled.div`
   z-index: 1;
-  ${({ $position }) => $position || 'top'}: 0;
+  ${({ $position }) => $position ?? 'top'}: 0;
   background-color: #ffffffb2;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   height: 1rem;
-  ${({ $position }) => `margin-${$position || 'top'}`}: -1rem;
+  ${({ $position }) => `margin-${$position ?? 'top'}`}: -1rem;
 
   @media (prefers-color-scheme: dark) {
     background-color: #161616b2;
@@ -269,7 +269,7 @@ function search(data, terms) {
 }
 
 function getEnvironment(data, query) {
-  if (!Object.keys(data?.env || {}).length) {
+  if (!Object.keys(data?.env ?? {}).length) {
     return [];
   }
   if (query?.search?.trim())
@@ -305,7 +305,7 @@ function Environment() {
 
   const handleSearchChange = useCallback(
     (event) => {
-      setSearch(event.target.value || '');
+      setSearch(event.target.value ?? '');
     },
     [setSearch],
   );
@@ -418,7 +418,7 @@ function Environment() {
                 ? `Error loading environment variables: ${error.statusText || error.message}`
                 : isLoading && isInitial
                   ? 'Loading...'
-                  : 'No environment variables available'}
+                  : 'No environment variables found'}
             </i>
           </StatusMessage>
         )}
@@ -505,7 +505,7 @@ function EnvItemRow({
   }, [dataProvider, unsetPromptID, name]);
 
   return (
-    <EnvRow title={`${name} - ${plugin} (Priority ${priority || 0})`}>
+    <EnvRow title={`${name} - ${plugin} (Priority ${priority ?? 0})`}>
       {toggleCollapsed ? (
         <EnvKey width="30%" onClick={toggleCollapsed}>
           <FontAwesomeIcon
@@ -520,7 +520,7 @@ function EnvItemRow({
       )}
 
       <EnvDetail width="15%">
-        <i>{plugin}</i> <small>({priority || 0})</small>
+        <i>{plugin}</i> <small>({priority ?? 0})</small>
       </EnvDetail>
 
       <EnvValue
@@ -566,11 +566,11 @@ function Prompt({ prompts, known }) {
   }, []);
 
   const handleNameChange = useCallback((event) => {
-    setName(event.target.value || '');
+    setName(event.target.value ?? '');
   }, []);
 
   const handleValueChange = useCallback((event) => {
-    setValue(event.target.value || '');
+    setValue(event.target.value ?? '');
   }, []);
 
   const handleSecretChange = useCallback((event) => {

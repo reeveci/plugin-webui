@@ -1,8 +1,8 @@
 import { useResource } from '@civet/core';
-import { faAngleLeft, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import styled from 'styled-components';
 import PipelineDescription from '@/PipelineDescription';
 import PipelineEnv from '@/PipelineEnv';
@@ -20,7 +20,7 @@ const PipelinePage = styled.div`
 `;
 
 const PageContent = styled.div`
-  margin: 2rem auto;
+  margin: 1rem auto;
   padding: 2rem 4rem;
 
   @media (max-width: 767.9px) {
@@ -48,14 +48,12 @@ const StatusMessage = styled.p`
   text-align: center;
 `;
 
-function getPipelines(data) {
+function getPipeline(data) {
   return data ? [data] : [];
 }
 
 function Pipeline() {
-  const navigate = useNavigate();
-
-  const { workerGroup, pipelineID } = useParams();
+  const { id } = useParams();
 
   const {
     data: [pipeline],
@@ -64,17 +62,11 @@ function Pipeline() {
     error,
     notify,
   } = useResource({
-    name: `pipelines/${encodeURIComponent(workerGroup)}/${encodeURIComponent(
-      pipelineID,
-    )}`,
-    options: { getItems: getPipelines },
+    name: `pipelines/${encodeURIComponent(id)}`,
+    options: { getItems: getPipeline },
   });
 
   useAutoUpdate(notify, 2000);
-
-  const goBack = useCallback(() => {
-    navigate(`/workergroups/${encodeURIComponent(workerGroup)}`);
-  }, [navigate, workerGroup]);
 
   const [scrollBottom, setScrollBottom] = useState(false);
 
@@ -116,10 +108,6 @@ function Pipeline() {
     <PipelinePage ref={scrollRef} onScroll={handleScroll}>
       {pipeline ? (
         <PageContent>
-          <Button onClick={goBack}>
-            <FontAwesomeIcon icon={faAngleLeft} /> Go back
-          </Button>
-
           <PipelineSummary pipeline={pipeline} />
 
           <PipelineDescription pipeline={pipeline} />
@@ -131,9 +119,7 @@ function Pipeline() {
           ) ? (
             <PipelineLogs
               pipeline={pipeline}
-              href={`/pipelines/${encodeURIComponent(
-                workerGroup,
-              )}/${encodeURIComponent(pipelineID)}/logs`}
+              href={`/pipelines/${encodeURIComponent(id)}/logs`}
               requestScroll={scrollBottom ? requestScroll : undefined}
             />
           ) : null}
@@ -143,10 +129,6 @@ function Pipeline() {
               <FontAwesomeIcon icon={faArrowDown} fixedWidth />
             </ScrollBottomButton>
           )}
-
-          <Button onClick={goBack}>
-            <FontAwesomeIcon icon={faAngleLeft} /> Go back
-          </Button>
         </PageContent>
       ) : (
         <StatusMessage>

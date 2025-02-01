@@ -64,7 +64,7 @@ function PipelineDescription({ pipeline }) {
     setVisible((prev) => !prev);
   }, []);
 
-  if (!`${pipeline?.pipeline?.description || ''}`.trim()) return null;
+  if (!`${pipeline?.pipeline?.description ?? ''}`.trim()) return null;
 
   return (
     <Table>

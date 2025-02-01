@@ -95,11 +95,11 @@ function Login() {
   const [error, setError] = useState(undefined);
 
   const handleUsernameChange = useCallback((event) => {
-    setUsername(event.target.value || '');
+    setUsername(event.target.value ?? '');
   }, []);
 
   const handlePasswordChange = useCallback((event) => {
-    setPassword(event.target.value || '');
+    setPassword(event.target.value ?? '');
   }, []);
 
   const handleSignIn = useCallback(
@@ -112,7 +112,7 @@ function Login() {
             .post(`${API_URL}/auth`)
             .send({ username, password });
 
-          const { accessToken, expires } = res.body || {};
+          const { accessToken, expires } = res.body ?? {};
 
           if (!accessToken) throw new Error('Invalid response from server');
 

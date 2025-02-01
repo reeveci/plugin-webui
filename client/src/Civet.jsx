@@ -16,7 +16,7 @@ function joinURL(base, path) {
     'pathname',
     url.pathname.replace(
       /\/*$/,
-      path && path.startsWith('/') ? path : `/${path || ''}`,
+      path?.startsWith('/') ? path : `/${path ?? ''}`,
     ),
   );
   return url.href;
@@ -38,6 +38,7 @@ class UIDataProvider extends DataProvider {
     try {
       const res = await superagent
         .get(joinURL(this.url, resource))
+        .query(options.searchParams ?? {})
         .accept('json')
         .set('Authorization', `Bearer ${this.token}`);
 
@@ -105,7 +106,7 @@ class UIDataProvider extends DataProvider {
         while (!abortSignal.aborted && !chunk.done) {
           chunk = await reader.read();
 
-          data += decoder.decode(chunk.value || new Uint8Array(), {
+          data += decoder.decode(chunk.value ?? new Uint8Array(), {
             stream: !chunk.done,
           });
           if (data.startsWith('#:INIT:x')) {
