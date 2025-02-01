@@ -1,4 +1,4 @@
-import { useConfigContext, useResource } from "@civet/core";
+import { useConfigContext, useResource } from '@civet/core';
 import {
   faAdd,
   faAngleDown,
@@ -6,14 +6,14 @@ import {
   faLock,
   faTrash,
   faX,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import debounce from "lodash.debounce";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import styled from "styled-components";
-import { useAutoUpdate } from "../Civet";
-import { Button, Input, Select, TextArea } from "../styles";
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import debounce from 'lodash.debounce';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router';
+import styled from 'styled-components';
+import { Button, Input, Select, TextArea } from '@/styles';
+import useAutoUpdate from '@/useAutoUpdate';
 
 const EnvironmentPage = styled.div`
   flex: 1 0 0px;
@@ -67,7 +67,7 @@ const EnvKey = styled.td`
           color: #3992ff;
         }
         `
-      : ""}
+      : ''}
 `;
 
 const EnvDetail = styled.td`
@@ -111,7 +111,7 @@ const EnvValue = styled.td`
           border-color: #232323;
         }
       `
-      : ""}
+      : ''}
 `;
 
 const EnvControl = styled.td`
@@ -138,12 +138,12 @@ const StyledBarButton = styled(StyledButton)`
 
 const Blur = styled.div`
   z-index: 1;
-  ${({ $position }) => $position || "top"}: 0;
+  ${({ $position }) => $position || 'top'}: 0;
   background-color: #ffffffb2;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   height: 1rem;
-  ${({ $position }) => `margin-${$position || "top"}`}: -1rem;
+  ${({ $position }) => `margin-${$position || 'top'}`}: -1rem;
 
   @media (prefers-color-scheme: dark) {
     background-color: #161616b2;
@@ -260,7 +260,7 @@ const PromptTextArea = styled(TextArea)`
 
 function search(data, terms) {
   const env = Object.entries(data?.env ?? {}).filter(([name]) =>
-    terms.every((term) => name.replace(/-/g, " ").toLowerCase().includes(term)),
+    terms.every((term) => name.replace(/-/g, ' ').toLowerCase().includes(term)),
   );
   return {
     ...data,
@@ -277,9 +277,9 @@ function getEnvironment(data, query) {
       search(
         data,
         query.search
-          .split(" ")
+          .split(' ')
           .filter(Boolean)
-          .map((term) => term.replace(/-/g, " ").toLowerCase()),
+          .map((term) => term.replace(/-/g, ' ').toLowerCase()),
       ),
       data,
     ];
@@ -288,13 +288,13 @@ function getEnvironment(data, query) {
 
 function Environment() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const search = searchParams.get("q") ?? "";
+  const search = searchParams.get('q') ?? '';
   const setSearch = useCallback(
     (value) => {
       setSearchParams(
         (searchParams) => {
-          if (value) searchParams.set("q", value);
-          else searchParams.delete("q");
+          if (value) searchParams.set('q', value);
+          else searchParams.delete('q');
           return searchParams;
         },
         { replace: true },
@@ -305,15 +305,15 @@ function Environment() {
 
   const handleSearchChange = useCallback(
     (event) => {
-      setSearch(event.target.value || "");
+      setSearch(event.target.value || '');
     },
     [setSearch],
   );
   const handleSearchClear = useCallback(() => {
-    setSearch("");
+    setSearch('');
   }, [setSearch]);
 
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const updateDebouncedSearch = useMemo(
     () => debounce(setDebouncedSearch, 100),
     [],
@@ -329,7 +329,7 @@ function Environment() {
     error,
     notify,
   } = useResource({
-    name: "environment",
+    name: 'environment',
     query: { search: debouncedSearch },
     options: { getItems: getEnvironment },
     persistent: true,
@@ -341,9 +341,9 @@ function Environment() {
     const map = {};
     env?.prompts?.forEach(({ id, name, secret, plugin }) => {
       if (!id || !name) return;
-      const key = plugin + "-" + name;
+      const key = plugin + '-' + name;
       if (!Object.hasOwn(map, key)) map[key] = { key, name, plugin };
-      map[key][secret ? "secret" : "variable"] = id;
+      map[key][secret ? 'secret' : 'variable'] = id;
     });
     return Object.values(map).sort((a, b) => {
       if (a.name < b.name) return -1;
@@ -359,7 +359,7 @@ function Environment() {
     env?.prompts?.forEach(({ id, name, secret, plugin }) => {
       if (!id || !name) return;
       if (!Object.hasOwn(map, plugin)) map[plugin] = {};
-      map[plugin][secret ? "secret" : "variable"] = id;
+      map[plugin][secret ? 'secret' : 'variable'] = id;
     });
     return map;
   }, [env]);
@@ -417,8 +417,8 @@ function Environment() {
               {error
                 ? `Error loading environment variables: ${error.statusText || error.message}`
                 : isLoading && isInitial
-                  ? "Loading..."
-                  : "No environment variables available"}
+                  ? 'Loading...'
+                  : 'No environment variables available'}
             </i>
           </StatusMessage>
         )}
@@ -451,7 +451,7 @@ function EnvItem({ name, entry, more, unsetPrompts }) {
         collapsed={collapsed}
         toggleCollapsed={more.length ? toggle : undefined}
         unsetPromptID={
-          unsetPrompts[entry.plugin]?.[entry.secret ? "secret" : "variable"]
+          unsetPrompts[entry.plugin]?.[entry.secret ? 'secret' : 'variable']
         }
       />
 
@@ -465,7 +465,7 @@ function EnvItem({ name, entry, more, unsetPrompts }) {
               {...entry}
               unsetPromptID={
                 unsetPrompts[entry.plugin]?.[
-                  entry.secret ? "secret" : "variable"
+                  entry.secret ? 'secret' : 'variable'
                 ]
               }
             />
@@ -497,7 +497,7 @@ function EnvItemRow({
     try {
       await dataProvider.create(
         `prompts/${encodeURIComponent(unsetPromptID)}`,
-        { name, value: "" },
+        { name, value: '' },
       );
     } catch {
       // do nothing
@@ -525,9 +525,9 @@ function EnvItemRow({
 
       <EnvValue
         $sub={sub}
-        width={unsetPromptID ? "40%" : "55%"}
+        width={unsetPromptID ? '40%' : '55%'}
         colSpan={unsetPromptID ? 1 : 2}
-        title={secret ? "[secret] •••••••" : value}
+        title={secret ? '[secret] •••••••' : value}
       >
         {secret ? (
           <>
@@ -553,8 +553,8 @@ function Prompt({ prompts, known }) {
   const { dataProvider } = useConfigContext();
 
   const [type, setType] = useState(prompts[0].key);
-  const [name, setName] = useState("");
-  const [value, setValue] = useState("");
+  const [name, setName] = useState('');
+  const [value, setValue] = useState('');
   const [secret, setSecret] = useState(false);
 
   if (!prompts.some((entry) => entry.key === type)) {
@@ -566,11 +566,11 @@ function Prompt({ prompts, known }) {
   }, []);
 
   const handleNameChange = useCallback((event) => {
-    setName(event.target.value || "");
+    setName(event.target.value || '');
   }, []);
 
   const handleValueChange = useCallback((event) => {
-    setValue(event.target.value || "");
+    setValue(event.target.value || '');
   }, []);
 
   const handleSecretChange = useCallback((event) => {
@@ -585,7 +585,7 @@ function Prompt({ prompts, known }) {
   if (secret && !prompt.secret) setSecret(false);
   if (!secret && !prompt.variable) setSecret(true);
 
-  const promptID = prompt?.[secret ? "secret" : "variable"];
+  const promptID = prompt?.[secret ? 'secret' : 'variable'];
   const alreadySet = useMemo(() => {
     if (!name || !prompt?.plugin) return false;
     return known[prompt?.plugin]?.includes(name);
@@ -607,8 +607,8 @@ function Prompt({ prompts, known }) {
         value,
       });
 
-      setName("");
-      setValue("");
+      setName('');
+      setValue('');
     } catch {
       // do nothing
     }
@@ -669,7 +669,7 @@ function Prompt({ prompts, known }) {
                 name="value"
                 value={value}
                 onChange={handleValueChange}
-                rows={value?.split("\n").length || 1}
+                rows={value?.split('\n').length || 1}
               />
             </PromptCell>
 

@@ -1,9 +1,9 @@
-import { faAngleDown, faAngleRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import MarkdownPreview from "@uiw/react-markdown-preview";
-import { useCallback, useState } from "react";
-import rehypeSanitize from "rehype-sanitize";
-import styled from "styled-components";
+import { faAngleDown, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import MarkdownPreview from '@uiw/react-markdown-preview';
+import { useCallback, useState } from 'react';
+import rehypeSanitize from 'rehype-sanitize';
+import styled from 'styled-components';
 
 const rehypePlugins = [rehypeSanitize];
 
@@ -64,7 +64,7 @@ function PipelineDescription({ pipeline }) {
     setVisible((prev) => !prev);
   }, []);
 
-  if (!`${pipeline?.pipeline?.description || ""}`.trim()) return null;
+  if (!`${pipeline?.pipeline?.description || ''}`.trim()) return null;
 
   return (
     <Table>

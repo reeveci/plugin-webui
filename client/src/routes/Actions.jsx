@@ -1,16 +1,16 @@
-import { useConfigContext, useResource } from "@civet/core";
+import { useConfigContext, useResource } from '@civet/core';
 import {
   faAngleDown,
   faAngleRight,
   faX,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import debounce from "lodash.debounce";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import styled, { css, keyframes } from "styled-components";
-import { useAutoUpdate } from "../Civet";
-import { Button, Input } from "../styles";
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import debounce from 'lodash.debounce';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router';
+import styled, { css, keyframes } from 'styled-components';
+import { Button, Input } from '@/styles';
+import useAutoUpdate from '@/useAutoUpdate';
 
 const ActionsPage = styled.div`
   flex: 1 0 0px;
@@ -124,14 +124,14 @@ const ActionButton = styled(Button)`
 
   ${({ $status }) => {
     switch ($status) {
-      case "success":
+      case 'success':
         return successAnimation;
 
-      case "error":
+      case 'error':
         return errorAnimation;
 
       default:
-        return "";
+        return '';
     }
   }}
 
@@ -157,12 +157,12 @@ const StyledBarButton = styled(StyledButton)`
 
 const Blur = styled.div`
   z-index: 1;
-  ${({ $position }) => $position || "top"}: 0;
+  ${({ $position }) => $position || 'top'}: 0;
   background-color: #ffffffb2;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   height: 1rem;
-  ${({ $position }) => `margin-${$position || "top"}`}: -1rem;
+  ${({ $position }) => `margin-${$position || 'top'}`}: -1rem;
 
   @media (prefers-color-scheme: dark) {
     background-color: #161616b2;
@@ -204,7 +204,7 @@ function search(data, terms) {
   const searchGroup = (name, group, terms) => {
     if (!terms.length) return {};
     const remainingTerms = terms.filter(
-      (term) => !name.replace(/-/g, " ").toLowerCase().includes(term),
+      (term) => !name.replace(/-/g, ' ').toLowerCase().includes(term),
     );
     if (remainingTerms.length) return s(group, remainingTerms);
     return group;
@@ -215,7 +215,7 @@ function search(data, terms) {
     return actions.filter((action) =>
       terms.every((term) =>
         [action.name, action.id].some((item) =>
-          item?.replace(/-/g, " ").toLowerCase().includes(term),
+          item?.replace(/-/g, ' ').toLowerCase().includes(term),
         ),
       ),
     );
@@ -244,9 +244,9 @@ function getActions(data, query) {
       search(
         data,
         query.search
-          .split(" ")
+          .split(' ')
           .filter(Boolean)
-          .map((term) => term.replace(/-/g, " ").toLowerCase()),
+          .map((term) => term.replace(/-/g, ' ').toLowerCase()),
       ),
       data,
     ];
@@ -255,13 +255,13 @@ function getActions(data, query) {
 
 function Actions() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const search = searchParams.get("q") ?? "";
+  const search = searchParams.get('q') ?? '';
   const setSearch = useCallback(
     (value) => {
       setSearchParams(
         (searchParams) => {
-          if (value) searchParams.set("q", value);
-          else searchParams.delete("q");
+          if (value) searchParams.set('q', value);
+          else searchParams.delete('q');
           return searchParams;
         },
         { replace: true },
@@ -272,15 +272,15 @@ function Actions() {
 
   const handleSearchChange = useCallback(
     (event) => {
-      setSearch(event.target.value || "");
+      setSearch(event.target.value || '');
     },
     [setSearch],
   );
   const handleSearchClear = useCallback(() => {
-    setSearch("");
+    setSearch('');
   }, [setSearch]);
 
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const updateDebouncedSearch = useMemo(
     () => debounce(setDebouncedSearch, 100),
     [],
@@ -296,7 +296,7 @@ function Actions() {
     error,
     notify,
   } = useResource({
-    name: "actions",
+    name: 'actions',
     query: { search: debouncedSearch },
     options: { getItems: getActions },
     persistent: true,
@@ -344,8 +344,8 @@ function Actions() {
               {error
                 ? `Error loading actions: ${error.statusText || error.message}`
                 : isLoading && isInitial
-                  ? "Loading..."
-                  : "No actions available"}
+                  ? 'Loading...'
+                  : 'No actions available'}
             </i>
           </StatusMessage>
         )}
@@ -391,7 +391,7 @@ function SubGroup({ name, groups, actions }) {
               icon={visible ? faAngleDown : faAngleRight}
               fixedWidth
             />
-            {name.replace(/-/g, " ")}
+            {name.replace(/-/g, ' ')}
           </Header>
         </HeaderRow>
 
@@ -416,15 +416,15 @@ function Action({ id, name, plugin }) {
     setStatus(undefined);
     try {
       await dataProvider.create(`actions/${encodeURIComponent(id)}`, {});
-      setStatus("success");
+      setStatus('success');
     } catch {
-      setStatus("error");
+      setStatus('error');
     }
   }, [dataProvider, id]);
 
   return (
     <ActionButton key={id} onClick={handleClick} $status={status}>
-      {(name || id).replace(/-/g, " ")}
+      {(name || id).replace(/-/g, ' ')}
       <br />
       <i>{plugin}</i>
     </ActionButton>

@@ -1,9 +1,8 @@
-import { createContext, useMemo } from "react";
-import Login from "./Login";
-import { TOKEN_COOKIE } from "./environment";
-import { getCookie, parseJWT, validateJWT } from "./token";
-
-export const AuthContext = createContext({});
+import { useMemo } from 'react';
+import AuthContext from '@/AuthContext';
+import Login from '@/Login';
+import { TOKEN_COOKIE } from '@/environment';
+import { getCookie, parseJWT, validateJWT } from '@/token';
 
 function Auth({ children }) {
   const accessToken = getCookie(TOKEN_COOKIE);

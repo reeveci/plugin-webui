@@ -1,22 +1,22 @@
-import { ConfigProvider, DataProvider } from "@civet/core";
-import { useEffect, useState } from "react";
-import superagent from "superagent";
-import { TextDecoder as DecoderPolyfill } from "text-encoding-utf-8";
-import Url from "url-parse";
-import { API_URL, TOKEN_COOKIE } from "./environment";
-import { clearCookie, getCookie } from "./token";
+import { ConfigProvider, DataProvider } from '@civet/core';
+import { useState } from 'react';
+import superagent from 'superagent';
+import { TextDecoder as DecoderPolyfill } from 'text-encoding-utf-8';
+import Url from 'url-parse';
+import { API_URL, TOKEN_COOKIE } from '@/environment';
+import { clearCookie, getCookie } from '@/token';
 
-if (typeof window.TextDecoder === "undefined") {
+if (typeof window.TextDecoder === 'undefined') {
   window.TextDecoder = DecoderPolyfill;
 }
 
 function joinURL(base, path) {
   const url = new Url(base, {});
   url.set(
-    "pathname",
+    'pathname',
     url.pathname.replace(
       /\/*$/,
-      path && path.startsWith("/") ? path : `/${path || ""}`,
+      path && path.startsWith('/') ? path : `/${path || ''}`,
     ),
   );
   return url.href;
@@ -38,8 +38,8 @@ class UIDataProvider extends DataProvider {
     try {
       const res = await superagent
         .get(joinURL(this.url, resource))
-        .accept("json")
-        .set("Authorization", `Bearer ${this.token}`);
+        .accept('json')
+        .set('Authorization', `Bearer ${this.token}`);
 
       return options.getItems(res.body, query);
     } catch (err) {
@@ -58,8 +58,8 @@ class UIDataProvider extends DataProvider {
     try {
       const res = await superagent
         .post(joinURL(this.url, resource))
-        .accept("json")
-        .set("Authorization", `Bearer ${this.token}`)
+        .accept('json')
+        .set('Authorization', `Bearer ${this.token}`)
         .send(data);
 
       return res.body;
@@ -83,11 +83,11 @@ class UIDataProvider extends DataProvider {
         }
 
         const res = await fetch(joinURL(this.url, resource), {
-          mode: "cors",
-          cache: "no-store",
-          credentials: "same-origin",
+          mode: 'cors',
+          cache: 'no-store',
+          credentials: 'same-origin',
           headers: {
-            Accept: "text/plain",
+            Accept: 'text/plain',
             Authorization: `Bearer ${this.token}`,
           },
           signal: abortController == null ? undefined : abortController.signal,
@@ -98,9 +98,9 @@ class UIDataProvider extends DataProvider {
         }
 
         const reader = res.body.getReader();
-        const decoder = new TextDecoder("utf-8");
+        const decoder = new TextDecoder('utf-8');
 
-        let data = "";
+        let data = '';
         let chunk = {};
         while (!abortSignal.aborted && !chunk.done) {
           chunk = await reader.read();
@@ -108,8 +108,8 @@ class UIDataProvider extends DataProvider {
           data += decoder.decode(chunk.value || new Uint8Array(), {
             stream: !chunk.done,
           });
-          if (data.startsWith("#:INIT:x")) {
-            data = data.replace(/^(#:INIT:x+\n)+/g, "");
+          if (data.startsWith('#:INIT:x')) {
+            data = data.replace(/^(#:INIT:x+\n)+/g, '');
           }
 
           cb(undefined, false, [data]);
@@ -132,28 +132,3 @@ function Civet({ children }) {
 }
 
 export default Civet;
-
-export function useAutoUpdate(notify, interval) {
-  const [visible, setVisible] = useState(!document.hidden);
-
-  useEffect(() => {
-    function onVisibilityChange() {
-      setVisible(!document.hidden);
-    }
-
-    document.addEventListener("visibilitychange", onVisibilityChange);
-
-    return () =>
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-  }, []);
-
-  useEffect(() => {
-    if (!visible) return;
-
-    notify();
-
-    const i = setInterval(notify, interval);
-
-    return () => clearInterval(i);
-  }, [notify, interval, visible]);
-}

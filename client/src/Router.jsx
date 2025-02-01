@@ -3,14 +3,14 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
-} from "react-router-dom";
-import App from "./App";
-import Error from "./Error";
-import Actions from "./routes/Actions";
-import Environment from "./routes/Environment";
-import Index from "./routes/Index";
-import Pipeline from "./routes/Pipeline";
-import WorkerGroup from "./routes/WorkerGroup";
+} from 'react-router';
+import App from '@/App';
+import Error from '@/Error';
+import Actions from '@/routes/Actions';
+import Environment from '@/routes/Environment';
+import Index from '@/routes/Index';
+import Pipeline from '@/routes/Pipeline';
+import WorkerGroup from '@/routes/WorkerGroup';
 
 const router = createBrowserRouter(
   createRoutesFromElements(

@@ -1,18 +1,18 @@
-import { useResource } from "@civet/core";
+import { useResource } from '@civet/core';
 import {
   faBars,
   faLayerGroup,
   faRightFromBracket,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useContext, useMemo, useState } from "react";
-import { Link, NavLink, Outlet } from "react-router-dom";
-import styled from "styled-components";
-import { AuthContext } from "./Auth";
-import { useAutoUpdate } from "./Civet";
-import { APP_NAME, TOKEN_COOKIE } from "./environment";
-import { Button, Title } from "./styles";
-import { clearCookie } from "./token";
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useCallback, useContext, useMemo, useState } from 'react';
+import { Link, NavLink, Outlet } from 'react-router';
+import styled from 'styled-components';
+import AuthContext from '@/AuthContext';
+import { APP_NAME, TOKEN_COOKIE } from '@/environment';
+import { Button, Title } from '@/styles';
+import { clearCookie } from '@/token';
+import useAutoUpdate from '@/useAutoUpdate';
 
 const MenuButton = styled(Button)`
   margin: 0 0 0 1rem;
@@ -81,7 +81,7 @@ const TitleLink = styled(Link)`
 const SignOutButton = styled(Button)`
   margin: 0 0 0 auto;
   color: inherit;
-  visibility: ${({ onClick }) => (onClick ? undefined : "hidden")};
+  visibility: ${({ onClick }) => (onClick ? undefined : 'hidden')};
 `;
 
 const NavList = styled.ul`
@@ -166,7 +166,7 @@ const Detail = styled.div`
         ? `
           display: none;
           `
-        : ""}
+        : ''}
   }
 
   flex: 1 0 0px;
@@ -192,7 +192,7 @@ function App() {
     error,
     notify,
   } = useResource({
-    name: "pipelines",
+    name: 'pipelines',
     options: {
       getItems: getWorkerGroups,
     },
@@ -200,7 +200,7 @@ function App() {
 
   useAutoUpdate(notify, 2000);
 
-  const canSignOut = accessTokenPayload?.origin !== "basic";
+  const canSignOut = accessTokenPayload?.origin !== 'basic';
   const handleSignOut = useMemo(
     () =>
       canSignOut
@@ -263,8 +263,8 @@ function App() {
                         error.statusText || error.message
                       }`
                     : isLoading && isInitial
-                      ? "Loading..."
-                      : "Queue is empty"}
+                      ? 'Loading...'
+                      : 'Queue is empty'}
                 </i>
               </NavMessage>
             )}
@@ -296,7 +296,7 @@ function NavItem({ href, closeMenu, children }) {
     <NavListItem>
       <NavLink
         to={href}
-        className={({ isActive }) => (isActive ? "active" : "")}
+        className={({ isActive }) => (isActive ? 'active' : '')}
         onClick={closeMenu}
       >
         {children}

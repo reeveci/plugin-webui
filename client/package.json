@@ -6,36 +6,40 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint src --ext js,jsx --report-unused-disable-directives",
+    "lint": "eslint",
     "preview": "vite preview",
     "prettify": "prettier . --write"
   },
   "dependencies": {
     "@civet/core": "^1.4.1",
-    "@fortawesome/fontawesome-svg-core": "^6.6.0",
-    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@uiw/react-markdown-preview": "^5.1.3",
     "lodash.debounce": "^4.0.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.27.0",
+    "react-router": "^7.1.5",
     "rehype-sanitize": "^6.0.0",
-    "styled-components": "^6.1.13",
+    "styled-components": "^6.1.14",
     "superagent": "^10.1.1",
     "text-encoding-utf-8": "^1.0.2",
     "url-parse": "^1.5.10"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.3",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.0.0",
+    "@eslint/js": "^9.19.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.19.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.2.0-canary-9ff42a87-20250130",
+    "eslint-plugin-react-refresh": "^0.4.18",
     "eslint-plugin-unused-imports": "^4.1.4",
-    "prettier": "^3.3.3",
-    "vite": "^5.4.10"
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "vite": "^6.0.11"
   }
 }

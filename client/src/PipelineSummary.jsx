@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { Status } from "./styles";
+import { Link } from 'react-router';
+import styled from 'styled-components';
+import { Status } from '@/styles';
 
 const Name = styled.td`
   font-size: 1rem;
@@ -113,9 +113,9 @@ function PipelineSummary({ pipeline, href }) {
           <StatusCell width="30%">
             {pipeline.startTime ? (
               <>
-                {new Date(pipeline.startTime).toLocaleDateString("en-US")}
+                {new Date(pipeline.startTime).toLocaleDateString('en-US')}
                 <br />
-                {new Date(pipeline.startTime).toLocaleTimeString("en-US")}
+                {new Date(pipeline.startTime).toLocaleTimeString('en-US')}
               </>
             ) : null}
           </StatusCell>

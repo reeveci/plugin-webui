@@ -1,8 +1,8 @@
-import { useResource } from "@civet/core";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
-import { useAutoUpdate } from "../Civet";
-import PipelineSummary from "../PipelineSummary";
+import { useResource } from '@civet/core';
+import { useParams } from 'react-router';
+import styled from 'styled-components';
+import PipelineSummary from '@/PipelineSummary';
+import useAutoUpdate from '@/useAutoUpdate';
 
 const WorkerGroupPage = styled.div`
   flex: 1 0 0px;
@@ -67,8 +67,8 @@ function WorkerGroup() {
             {error
               ? `Error loading pipelines: ${error.statusText || error.message}`
               : isLoading && isInitial
-                ? "Loading..."
-                : "Queue is empty"}
+                ? 'Loading...'
+                : 'Queue is empty'}
           </i>
         </StatusMessage>
       )}

@@ -2,10 +2,10 @@ import {
   faAngleDown,
   faAngleRight,
   faLock,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useState } from "react";
-import styled from "styled-components";
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useCallback, useState } from 'react';
+import styled from 'styled-components';
 
 const Table = styled.table`
   color: inherit;
@@ -92,7 +92,7 @@ function PipelineEnv({ pipeline }) {
 
                 <EnvValue
                   width="60%"
-                  title={entry.secret ? "[secret] •••••••" : entry.value}
+                  title={entry.secret ? '[secret] •••••••' : entry.value}
                 >
                   {entry.secret ? (
                     <>

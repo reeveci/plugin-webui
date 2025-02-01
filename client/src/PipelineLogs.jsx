@@ -1,15 +1,15 @@
-import { useResource } from "@civet/core";
+import { useResource } from '@civet/core';
 import {
   faAngleDown,
   faAngleRight,
   faRotateRight,
   faTerminal,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import styled from "styled-components";
-import { DEFAULT_STAGE } from "./environment";
-import { Button, Status } from "./styles";
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import styled from 'styled-components';
+import { DEFAULT_STAGE } from '@/environment';
+import { Button, Status } from '@/styles';
 
 const SetupTable = styled.table`
   color: inherit;
@@ -61,7 +61,7 @@ const Card = styled.table`
   }
 
   & + &::before {
-    content: "︙";
+    content: '︙';
     color: #818181;
     font-size: 1.25rem;
     position: absolute;
@@ -75,7 +75,7 @@ const CardContent = styled.tbody``;
 
 const HeaderRow = styled.tr`
   max-width: 0px;
-  position: ${({ $sticky }) => ($sticky ? "sticky" : "inherit")};
+  position: ${({ $sticky }) => ($sticky ? 'sticky' : 'inherit')};
   top: -2px;
   margin-bottom: 2px;
 `;
@@ -131,7 +131,7 @@ const Logs = styled.td`
         border-top-left-radius: 0px;
         border-top-right-radius: 0px;
         `
-      : ""}
+      : ''}
 
   pre {
     display: inline-block;
@@ -175,12 +175,12 @@ function PipelineLogs({ pipeline, href, requestScroll }) {
   }, [requestScroll, logs]);
 
   const { setup, steps } = useMemo(() => {
-    const setup = { log: "" };
+    const setup = { log: '' };
     const steps = (pipeline?.pipeline?.steps || []).map((step) => ({
       name: step.name,
       stage: step.stage,
-      log: "",
-      status: "waiting",
+      log: '',
+      status: 'waiting',
     }));
 
     /*
@@ -210,34 +210,34 @@ function PipelineLogs({ pipeline, href, requestScroll }) {
       cleanup
     */
 
-    (logs || "").split("\n").forEach((line) => {
-      if (line.startsWith("[headline]") || line.startsWith("[description]")) {
+    (logs || '').split('\n').forEach((line) => {
+      if (line.startsWith('[headline]') || line.startsWith('[description]')) {
         return;
       }
 
-      if (line.startsWith("[step:")) {
+      if (line.startsWith('[step:')) {
         const match = /^\[step:(\d+)(?::([^\]]+))?\]\s+>[ …](.*)$/.exec(line);
         if (match) {
           const [, number, status, message] = match;
           const step = steps[number - 1];
           if (step) {
-            if (step.status === "waiting") step.status = pipeline.status;
+            if (step.status === 'waiting') step.status = pipeline.status;
 
             if (status) {
-              switch (status.replace(/:!$/g, "")) {
-                case "skip":
-                  step.status = "skip";
+              switch (status.replace(/:!$/g, '')) {
+                case 'skip':
+                  step.status = 'skip';
                   return;
 
-                case "success":
-                  step.status = "success";
+                case 'success':
+                  step.status = 'success';
                   return;
 
-                case "failure":
-                  step.status = "failed";
+                case 'failure':
+                  step.status = 'failed';
                   return;
 
-                case ">":
+                case '>':
                   step.log += `${message}\n`;
                   return;
 
@@ -249,7 +249,7 @@ function PipelineLogs({ pipeline, href, requestScroll }) {
       }
 
       if (line) {
-        setup.log += `${line.replace(/^\[[^\]]+\]\s+>[ …]/, "")}\n`;
+        setup.log += `${line.replace(/^\[[^\]]+\]\s+>[ …]/, '')}\n`;
       }
     });
 
@@ -303,7 +303,7 @@ export default PipelineLogs;
 function Step({ name, stage, status, log, index, count }) {
   const [auto, setAuto] = useState(true);
   const [visible, setVisible] = useState(() =>
-    ["running", "failed"].includes(status),
+    ['running', 'failed'].includes(status),
   );
   const handleToggleVisible = useCallback(() => {
     setAuto(false);
@@ -311,7 +311,7 @@ function Step({ name, stage, status, log, index, count }) {
   }, []);
 
   useEffect(() => {
-    if (auto) setVisible(["running", "failed"].includes(status));
+    if (auto) setVisible(['running', 'failed'].includes(status));
   }, [auto, status]);
 
   return (
@@ -326,7 +326,7 @@ function Step({ name, stage, status, log, index, count }) {
             }
           >
             <Name>
-              {name}{" "}
+              {name}{' '}
               <small>
                 <i>
                   {stage && stage !== DEFAULT_STAGE ? <>{stage} </> : null}(

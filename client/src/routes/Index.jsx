@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const IndexPage = styled.div`
   flex: 1 0 0px;
@@ -43,7 +43,7 @@ function Index() {
       <PageContent>
         Welcome to Reeve!
         <br />
-        Check out{" "}
+        Check out{' '}
         <a href="https://github.com/reeveci/reeve#reeve-ci--cd">the docs</a>.
       </PageContent>
     </IndexPage>

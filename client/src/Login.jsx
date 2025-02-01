@@ -1,14 +1,14 @@
 import {
   faExclamation,
   faRightToBracket,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useState } from "react";
-import styled from "styled-components";
-import superagent from "superagent";
-import { API_URL, APP_NAME, TOKEN_COOKIE } from "./environment";
-import { Button, Input, Title } from "./styles";
-import { setCookie } from "./token";
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useCallback, useState } from 'react';
+import styled from 'styled-components';
+import superagent from 'superagent';
+import { API_URL, APP_NAME, TOKEN_COOKIE } from '@/environment';
+import { Button, Input, Title } from '@/styles';
+import { setCookie } from '@/token';
 
 const LoginPage = styled.div`
   width: 100%;
@@ -90,16 +90,16 @@ const Buttons = styled.p`
 `;
 
 function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(undefined);
 
   const handleUsernameChange = useCallback((event) => {
-    setUsername(event.target.value || "");
+    setUsername(event.target.value || '');
   }, []);
 
   const handlePasswordChange = useCallback((event) => {
-    setPassword(event.target.value || "");
+    setPassword(event.target.value || '');
   }, []);
 
   const handleSignIn = useCallback(
@@ -114,13 +114,13 @@ function Login() {
 
           const { accessToken, expires } = res.body || {};
 
-          if (!accessToken) throw new Error("Invalid response from server");
+          if (!accessToken) throw new Error('Invalid response from server');
 
           setCookie(TOKEN_COOKIE, accessToken, expires);
           window.location.reload();
         } catch (err) {
           if (err.status === 401) {
-            setError(new Error("Invalid credentials"));
+            setError(new Error('Invalid credentials'));
           } else {
             setError(err);
           }

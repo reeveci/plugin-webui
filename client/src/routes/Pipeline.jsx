@@ -1,15 +1,15 @@
-import { useResource } from "@civet/core";
-import { faAngleLeft, faArrowDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import styled from "styled-components";
-import { useAutoUpdate } from "../Civet";
-import PipelineDescription from "../PipelineDescription";
-import PipelineEnv from "../PipelineEnv";
-import PipelineLogs from "../PipelineLogs";
-import PipelineSummary from "../PipelineSummary";
-import { Button } from "../styles";
+import { useResource } from '@civet/core';
+import { faAngleLeft, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
+import styled from 'styled-components';
+import PipelineDescription from '@/PipelineDescription';
+import PipelineEnv from '@/PipelineEnv';
+import PipelineLogs from '@/PipelineLogs';
+import PipelineSummary from '@/PipelineSummary';
+import { Button } from '@/styles';
+import useAutoUpdate from '@/useAutoUpdate';
 
 const PipelinePage = styled.div`
   flex: 1 0 0px;
@@ -96,8 +96,8 @@ function Pipeline() {
       if (!scrollBottom) return;
       requestScroll();
     };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
   }, [scrollBottom]);
 
   useEffect(() => {
@@ -126,7 +126,7 @@ function Pipeline() {
 
           <PipelineEnv pipeline={pipeline} />
 
-          {["running", "success", "failed", "timeout"].includes(
+          {['running', 'success', 'failed', 'timeout'].includes(
             pipeline.status,
           ) ? (
             <PipelineLogs
@@ -154,8 +154,8 @@ function Pipeline() {
             {error
               ? `Error loading pipeline: ${error.statusText || error.message}`
               : isLoading && isInitial
-                ? "Loading..."
-                : "Pipeline not found"}
+                ? 'Loading...'
+                : 'Pipeline not found'}
           </i>
         </StatusMessage>
       )}

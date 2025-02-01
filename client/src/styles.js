@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle, css } from "styled-components";
+import styled, { createGlobalStyle, css } from 'styled-components';
 
 const Styles = createGlobalStyle`
   html {
@@ -163,26 +163,26 @@ export const Status = styled.span`
 
     switch ($status) {
       default:
-      case "enqueued":
-      case "waiting":
-      case "timeout":
-        color = "#a4a4a4";
-        shadow = "#a4a4a432";
+      case 'enqueued':
+      case 'waiting':
+      case 'timeout':
+        color = '#a4a4a4';
+        shadow = '#a4a4a432';
         break;
 
-      case "running":
-        color = "#eeb004";
-        shadow = "#eeb00432";
+      case 'running':
+        color = '#eeb004';
+        shadow = '#eeb00432';
         break;
 
-      case "success":
-        color = "hsl(98, 98%, 42%)";
-        shadow = "hsla(98, 98%, 42%, 0.2)";
+      case 'success':
+        color = 'hsl(98, 98%, 42%)';
+        shadow = 'hsla(98, 98%, 42%, 0.2)';
         break;
 
-      case "failed":
-        color = "#f44250";
-        shadow = "#f4425032";
+      case 'failed':
+        color = '#f44250';
+        shadow = '#f4425032';
         break;
     }
 

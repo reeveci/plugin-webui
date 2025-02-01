@@ -1,5 +1,5 @@
-import { useRouteError } from "react-router-dom";
-import styled from "styled-components";
+import { useRouteError } from 'react-router';
+import styled from 'styled-components';
 
 const ErrorPage = styled.div`
   flex: 1 0 0px;
