@@ -10,14 +10,15 @@ func HandlePipelines(p *WebUIPlugin) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		groups := req.URL.Query()["workerGroup"]
 
-		pipelines := p.History.Summary(groups)
+		pipelines := p.History.Entries(groups)
+    count := len(pipelines)
 
 		result := PipelinesResponse{
-			Pipelines: make([]PipelineSummaryResponse, len(pipelines)),
+			Pipelines: make([]PipelineSummaryResponse, count),
 		}
 
 		for i, entry := range pipelines {
-			result.Pipelines[i].ApplyHistoryEntry(&entry)
+			result.Pipelines[count-1-i].ApplyHistoryEntry(&entry)
 		}
 
 		res.Header().Set("Content-Type", "application/json")

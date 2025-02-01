@@ -13,13 +13,13 @@ import (
 
 func NewPipelineHistory(size int) *PipelineHistory {
 	return &PipelineHistory{
-		Entries: make([]*HistoryEntry, 0, size+1),
+		entries: make([]*HistoryEntry, 0, size+1),
 		size:    size,
 	}
 }
 
 type PipelineHistory struct {
-	Entries []*HistoryEntry
+	entries []*HistoryEntry
 	size    int
 
 	sync.Mutex
@@ -37,7 +37,7 @@ func (p *PipelineHistory) Put(status schema.PipelineStatus) *HistoryEntry {
 	defer p.Unlock()
 
 	var entry *HistoryEntry
-	for _, value := range p.Entries {
+	for _, value := range p.entries {
 		if value.ActivityID == status.ActivityID {
 			entry = value
 			entry.PipelineStatus = status
@@ -53,7 +53,7 @@ func (p *PipelineHistory) Put(status schema.PipelineStatus) *HistoryEntry {
 			Logs:           nil,
 		}
 
-		p.Entries = append(p.Entries, entry)
+		p.entries = append(p.entries, entry)
 	}
 
 	entry.PipelineStatus.Logs = nil
@@ -90,7 +90,7 @@ func (p *PipelineHistory) Get(activityID string) (result HistoryEntry, ok bool) 
 	p.Lock()
 	defer p.Unlock()
 
-	for _, value := range p.Entries {
+	for _, value := range p.entries {
 		if value.ActivityID == activityID {
 			return *value, true
 		}
@@ -104,7 +104,7 @@ func (p *PipelineHistory) Groups() []string {
 	defer p.Unlock()
 
 	names := make(map[string]bool)
-	for _, entry := range p.Entries {
+	for _, entry := range p.entries {
 		names[entry.WorkerGroup] = true
 	}
 
@@ -117,11 +117,11 @@ func (p *PipelineHistory) Groups() []string {
 	return result
 }
 
-func (p *PipelineHistory) Summary(workerGroups []string) []HistoryEntry {
+func (p *PipelineHistory) Entries(workerGroups []string) []HistoryEntry {
 	p.Lock()
 	defer p.Unlock()
 
-	count := len(p.Entries)
+	count := len(p.entries)
 
 	groups := make(map[string]bool, len(workerGroups))
 	for _, key := range workerGroups {
@@ -131,7 +131,7 @@ func (p *PipelineHistory) Summary(workerGroups []string) []HistoryEntry {
 
 	result := make([]HistoryEntry, 0, count)
 
-	for _, entry := range p.Entries {
+	for _, entry := range p.entries {
 		if !filterGroups || groups[entry.WorkerGroup] {
 			result = append(result, *entry)
 		}
@@ -141,13 +141,13 @@ func (p *PipelineHistory) Summary(workerGroups []string) []HistoryEntry {
 }
 
 func (p *PipelineHistory) cleanup() {
-	count := len(p.Entries)
+	count := len(p.entries)
 
 	filtered := make([]*HistoryEntry, 0, count)
 	free := p.size
 
-	for i := range p.Entries {
-		value := p.Entries[count-1-i]
+	for i := range p.entries {
+		value := p.entries[count-1-i]
 
 		if !value.Finished() {
 			filtered = append(filtered, value)
@@ -166,5 +166,5 @@ func (p *PipelineHistory) cleanup() {
 	for i, value := range filtered {
 		result[remaining-1-i] = value
 	}
-	p.Entries = result
+	p.entries = result
 }
