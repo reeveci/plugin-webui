@@ -8,6 +8,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
+import Log from '@/Log';
 import { DEFAULT_STAGE } from '@/environment';
 import { Button, Status } from '@/styles';
 
@@ -275,7 +276,13 @@ function PipelineLogs({ pipeline, href, requestScroll }) {
           {setupVisible ? (
             <LogsRow>
               <Logs>
-                <pre>{setup.log || <i>No logs available</i>}</pre>
+                {setup.log ? (
+                  <Log>{setup.log}</Log>
+                ) : (
+                  <pre>
+                    <i>No logs available</i>
+                  </pre>
+                )}
               </Logs>
             </LogsRow>
           ) : null}
@@ -345,7 +352,13 @@ function Step({ name, stage, status, log, index, count }) {
         {visible ? (
           <LogsRow>
             <Logs $attached>
-              <pre>{log || <i>No logs available</i>}</pre>
+              {log ? (
+                <Log>{log}</Log>
+              ) : (
+                <pre>
+                  <i>No logs available</i>
+                </pre>
+              )}
             </Logs>
           </LogsRow>
         ) : null}
