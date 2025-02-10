@@ -288,6 +288,12 @@ function Actions() {
   useEffect(() => {
     updateDebouncedSearch(search);
   }, [updateDebouncedSearch, search]);
+  useEffect(
+    () => () => {
+      updateDebouncedSearch.cancel();
+    },
+    [updateDebouncedSearch],
+  );
 
   const {
     data: [actions],

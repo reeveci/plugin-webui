@@ -1,4 +1,5 @@
 import { ConfigProvider, DataProvider } from '@civet/core';
+import debounce from 'lodash.debounce';
 import { useState } from 'react';
 import superagent from 'superagent';
 import { TextDecoder as DecoderPolyfill } from 'text-encoding-utf-8';
@@ -32,7 +33,10 @@ class UIDataProvider extends DataProvider {
 
   async handleGet(resource, query, options) {
     if (options.stream) {
-      return this.stream(resource);
+      return this.stream(
+        resource,
+        typeof options.stream === 'boolean' ? {} : options.stream,
+      );
     }
 
     try {
@@ -74,8 +78,10 @@ class UIDataProvider extends DataProvider {
     }
   }
 
-  async stream(resource) {
-    return async (cb, abortSignal) => {
+  async stream(resource, { debounce: wait, maxWait } = {}) {
+    return async (origCb, abortSignal) => {
+      let cb = origCb;
+
       try {
         let abortController;
         if (AbortController != null) {
@@ -101,6 +107,10 @@ class UIDataProvider extends DataProvider {
         const reader = res.body.getReader();
         const decoder = new TextDecoder('utf-8');
 
+        if (wait > 0) {
+          cb = debounce(origCb, wait, { maxWait });
+        }
+
         let data = '';
         let chunk = {};
         while (!abortSignal.aborted && !chunk.done) {
@@ -119,6 +129,8 @@ class UIDataProvider extends DataProvider {
         cb(undefined, true, [data]);
       } catch (err) {
         cb(err);
+      } finally {
+        cb.flush?.();
       }
     };
   }

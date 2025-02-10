@@ -148,7 +148,9 @@ function PipelineLogs({ pipeline, href, requestScroll }) {
     notify,
   } = useResource({
     name: href,
-    options: { stream: true },
+    options: {
+      stream: { debounce: 100, maxWait: 500 },
+    },
   });
 
   const reload = useCallback(() => {
