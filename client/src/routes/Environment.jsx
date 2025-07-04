@@ -8,12 +8,12 @@ import {
   faX,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import debounce from 'lodash.debounce';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router';
+import { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Button, Input, Select, TextArea } from '@/styles';
 import useAutoUpdate from '@/useAutoUpdate';
+import useDebouncedValue from '@/useDebouncedValue';
+import useSearchParam from '@/useSearchParam';
 
 const EnvironmentPage = styled.div`
   flex: 1 0 0px;
@@ -287,22 +287,7 @@ function getEnvironment(data, query) {
 }
 
 function Environment() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const search = searchParams.get('q') ?? '';
-  const setSearch = useCallback(
-    (value) => {
-      setSearchParams(
-        (searchParams) => {
-          if (value) searchParams.set('q', value);
-          else searchParams.delete('q');
-          return searchParams;
-        },
-        { replace: true },
-      );
-    },
-    [setSearchParams],
-  );
-
+  const [search = '', setSearch] = useSearchParam('q');
   const handleSearchChange = useCallback(
     (event) => {
       setSearch(event.target.value ?? '');
@@ -312,21 +297,7 @@ function Environment() {
   const handleSearchClear = useCallback(() => {
     setSearch('');
   }, [setSearch]);
-
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const updateDebouncedSearch = useMemo(
-    () => debounce(setDebouncedSearch, 100),
-    [],
-  );
-  useEffect(() => {
-    updateDebouncedSearch(search);
-  }, [updateDebouncedSearch, search]);
-  useEffect(
-    () => () => {
-      updateDebouncedSearch.cancel();
-    },
-    [updateDebouncedSearch],
-  );
+  const debouncedSearch = useDebouncedValue(search, 100);
 
   const {
     data: [env, unfiltered],
