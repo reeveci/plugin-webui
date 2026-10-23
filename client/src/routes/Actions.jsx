@@ -104,7 +104,8 @@ const successAnimation = css`
     0% { border: 1px solid hsl(98, 98%, 42%); }
     50% { border: 1px solid hsl(98, 98%, 42%); }
     100% { border: 1px solid transparent; }
-  `} 1s;
+  `}
+    1s;
 `;
 
 const errorAnimation = css`
@@ -112,7 +113,8 @@ const errorAnimation = css`
     0% { border: 1px solid #f44250; }
     50% { border: 1px solid #f44250; }
     100% { border: 1px solid transparent; }
-  `} 1s;
+  `}
+    1s;
 `;
 
 const ActionButton = styled(Button)`
