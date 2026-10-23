@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/gorilla/mux"
 	"github.com/reeveci/reeve-lib/schema"
@@ -18,7 +19,11 @@ func HandleTriggerPrompt(p *WebUIPlugin) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
 
-		id := vars["id"]
+		id, err := url.QueryUnescape(vars["id"])
+		if err != nil {
+			http.Error(res, fmt.Sprintf("invalid path parameter - %s", err), http.StatusBadRequest)
+			return
+		}
 		if id == "" {
 			http.Error(res, "missing prompt ID path parameter", http.StatusBadRequest)
 			return
@@ -56,7 +61,7 @@ func HandleTriggerPrompt(p *WebUIPlugin) http.HandlerFunc {
 
 		decoder := json.NewDecoder(req.Body)
 		decoder.DisallowUnknownFields()
-		err := decoder.Decode(&request)
+		err = decoder.Decode(&request)
 		if err != nil {
 			http.Error(res, fmt.Sprintf("invalid request body - %s", err), http.StatusBadRequest)
 			return

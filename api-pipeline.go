@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/gorilla/mux"
 )
@@ -12,7 +13,11 @@ func HandlePipeline(p *WebUIPlugin) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
 
-		id := vars["id"]
+		id, err := url.QueryUnescape(vars["id"])
+		if err != nil {
+			http.Error(res, fmt.Sprintf("invalid path parameter - %s", err), http.StatusBadRequest)
+			return
+		}
 		if id == "" {
 			http.Error(res, "missing id path parameter", http.StatusBadRequest)
 			return
@@ -25,10 +30,10 @@ func HandlePipeline(p *WebUIPlugin) http.HandlerFunc {
 		}
 
 		var result PipelineDetailResponse
-    result.ApplyHistoryEntry(&entry)
+		result.ApplyHistoryEntry(&entry)
 
 		res.Header().Set("Content-Type", "application/json")
-		err := json.NewEncoder(res).Encode(result)
+		err = json.NewEncoder(res).Encode(result)
 		if err != nil {
 			http.Error(res, fmt.Sprintf("error encoding response - %s", err), http.StatusInternalServerError)
 			return

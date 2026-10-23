@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -16,7 +17,11 @@ func HandlePipelineLogs(p *WebUIPlugin) http.HandlerFunc {
 
 		vars := mux.Vars(req)
 
-		id := vars["id"]
+		id, err := url.QueryUnescape(vars["id"])
+		if err != nil {
+			http.Error(res, fmt.Sprintf("invalid path parameter - %s", err), http.StatusBadRequest)
+			return
+		}
 		if id == "" {
 			http.Error(res, "missing id path parameter", http.StatusBadRequest)
 			return
@@ -45,7 +50,7 @@ func HandlePipelineLogs(p *WebUIPlugin) http.HandlerFunc {
 		rc.Flush()
 
 		r := bufio.NewReader(reader)
-    defer reader.Close()
+		defer reader.Close()
 
 		for {
 			read, err := r.ReadBytes('\n')
