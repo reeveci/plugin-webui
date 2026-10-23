@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -16,6 +17,8 @@ func HandleTriggerAction(p *WebUIPlugin) http.HandlerFunc {
 			http.Error(res, "missing action ID path parameter", http.StatusBadRequest)
 			return
 		}
+
+		p.Log.Info(fmt.Sprintf("got action ID: \"%s\"\n", id))
 
 		p.Actions.Lock()
 		action, ok := p.Actions.Actions[id]
