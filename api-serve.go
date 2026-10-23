@@ -22,6 +22,7 @@ func Serve(p *WebUIPlugin) {
 	// API
 
 	api := mux.NewRouter()
+	api.UseEncodedPath()
 	api.HandleFunc("/auth", CorsHandler(p, HandleAuth(p), http.MethodPost))
 	api.HandleFunc("/workerGroups", CorsHandler(p, AuthValidator(p, HandleWorkerGroups(p)), http.MethodGet))
 	api.HandleFunc("/pipelines", CorsHandler(p, AuthValidator(p, HandlePipelines(p)), http.MethodGet))
